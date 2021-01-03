@@ -18,5 +18,7 @@ namespace ReShade_Centralized
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
         }
+
     }
 }
+
