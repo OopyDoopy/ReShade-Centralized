@@ -1,6 +1,6 @@
 # ReShade-Centralized
 
-ReShade Centralized is an installer meant to replace the official installer for users who like using one shader repository, or otherwise centralizing their reshade files.  This means presets, screenshots, shader files, and reshade dlls are stored in one location, and the reshade.ini that gets generated points to these locations.  This installer also deploys the reshade dlls via symlinks, eliminating the need to update your reshade dlls for every single game when a new version drops.  Update once in this installer and you're good to go.  Time to basically say this in list form.
+ReShade Centralized is an installer (made in C# and .NET) meant to replace the official installer for users who like using one shader repository, or otherwise centralizing their reshade files.  This means presets, screenshots, shader files, and reshade dlls are stored in one location, and the reshade.ini that gets generated points to these locations.  This installer also deploys the reshade dlls via symlinks, eliminating the need to update your reshade dlls for every single game when a new version drops.  Update once in this installer and you're good to go.  Time to basically say this in list form.
 
 ## Features:
 - Install ReShade and deploy .dlls as symlinks (this is why the program needs admin privileges)
