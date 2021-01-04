@@ -118,6 +118,7 @@ namespace ReShade_Centralized
             File.Move(source, dest);
         }
 
+
         private void moveFiles(string source, string dest, string[] extensions) //enumerates all files of given extensions in source directory and subdirectories and moves them to dest directory, effectively collapsing folder structure.
         {
             DirectoryInfo d = new DirectoryInfo(source);
@@ -130,6 +131,21 @@ namespace ReShade_Centralized
             foreach (var file in files)
             {
                 moveWithReplace(file.FullName, dest + @"\" + file.Name);
+            }
+        }
+
+        private void copyFiles(string source, string dest, string[] extensions) //enumerates all files of given extensions in source directory and subdirectories and moves them to dest directory, effectively collapsing folder structure.
+        {
+            DirectoryInfo d = new DirectoryInfo(source);
+
+            var files =
+                d.EnumerateFiles("*", SearchOption.AllDirectories)
+                     .Where(f => extensions.Contains(f.Extension.ToLower()))
+                     .ToArray();
+
+            foreach (var file in files)
+            {
+                File.Copy(file.FullName, dest + @"\" + file.Name, true);
             }
         }
 
@@ -530,7 +546,7 @@ namespace ReShade_Centralized
                     }
                 }
                 client.Dispose();
-                string[] shaderExtensions = { ".fx", ".cfg" };
+                string[] shaderExtensions = { ".fx", ".cfg", ".fxh" };
                 string[] textureExtensions = { ".png", ".dds", ".bmp", ".jp*g" };
 
                 //Zip Extraction + Special cases----------------
@@ -578,14 +594,13 @@ namespace ReShade_Centralized
                     Directory.Delete(@".\temp1375817236\Insane-Shaders-master\Shaders\OldShaders", true);
                 }
 
-                //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Move the correct one and delete 
-
                 //End special cases------------
 
-                moveFiles(@".\temp1375817236", shaders, shaderExtensions);
-                moveFiles(@".\temp1375817236", textures, textureExtensions);
+                copyFiles(@".\temp1375817236", shaders, shaderExtensions);
+                copyFiles(@".\temp1375817236", textures, textureExtensions);
+                File.Copy(@".\temp1375817236\reshade-shaders-slim\Shaders\ReShade.fxh", shaders + @"\ReShade.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
+                File.Copy(@".\temp1375817236\reshade-shaders-slim\Shaders\ReShadeUI.fxh", shaders + @"\ReShadeUI.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
                 Directory.Delete(@".\temp1375817236", true);
-
 
                 worker.ReportProgress(100);
             }
