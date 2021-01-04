@@ -12,7 +12,7 @@ ReShade Centralized is an installer meant to replace the official installer for 
 - Expand shader download functionality to include updating only pre-existing shaders.
 - Create a UI for further customizing paths (currently can be done by editing ReShadeCentralized.ini).
 - Generally improve UI appearance.
-- Adding better error handling and reducing chances of extreme edge case disaster.
+- Add better error handling and reduce chances of extreme edge case disaster.
 
 ## Warning
 This is pre-release software and it will have bugs.  This software is heavily IO focused and creates/deletes folders and files regularly.  It's unlikely that you'll use it in such a way that you create a disastrous scenario, but it can't be guaranteed.  Use with caution, you are very much a tester currently.  **Be very careful about customizing your directories!**
