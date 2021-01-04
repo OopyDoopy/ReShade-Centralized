@@ -60,7 +60,9 @@ namespace ReShade_Centralized
                 Directory.CreateDirectory(presets);
                 Directory.CreateDirectory(screenshots);
                 Directory.CreateDirectory(dlls);
+                Directory.CreateDirectory(dlls + @"\Cache");
                 Directory.CreateDirectory(mdlls);
+                Directory.CreateDirectory(mdlls + @"\Cache");
                 backgroundWorker1.RunWorkerAsync(); //download reshade files
                 backgroundWorker2.RunWorkerAsync(); //download shader files
             }
@@ -262,7 +264,7 @@ namespace ReShade_Centralized
                     File.WriteAllText(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini",
                         @"[GENERAL]" + nl +
                         @"EffectSearchPaths=" + shaders + nl +
-                        @"IntermediateCachePath=" + workingDLLPath + nl +
+                        @"IntermediateCachePath=" + workingDLLPath + @"\Cache" + nl +
                         @"PerformanceMode=0" + nl +
                         @"PreprocessorDefinitions=RESHADE_DEPTH_INPUT_IS_REVERSED=0,RESHADE_DEPTH_INPUT_IS_LOGARITHMIC=0,RESHADE_DEPTH_INPUT_IS_UPSIDE_DOWN=0,RESHADE_DEPTH_LINEARIZATION_FAR_PLANE=1000" + nl +
                         @"PresetPath=" + presets + @"\" + gameName + @"\ReshadePreset.ini" + nl +
@@ -547,7 +549,7 @@ namespace ReShade_Centralized
                 }
                 client.Dispose();
                 string[] shaderExtensions = { ".fx", ".cfg", ".fxh" };
-                string[] textureExtensions = { ".png", ".dds", ".bmp", ".jp*g" };
+                string[] textureExtensions = { ".png", ".dds", ".bmp", ".jpg", ".jpeg" };
 
                 //Zip Extraction + Special cases----------------
 
