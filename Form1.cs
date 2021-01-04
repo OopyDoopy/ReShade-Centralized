@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -35,7 +36,6 @@ namespace ReShade_Centralized
             InitializeComponent();
             if (!File.Exists("ReShadeCentralized.ini"))
             {
-
                 MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade folder.", "First Time Startup Message");
                 CommonOpenFileDialog centralizedDialog = new CommonOpenFileDialog();
                 centralizedDialog.Title = "Create and/or Select your ReShade Centralized folder";
@@ -61,7 +61,8 @@ namespace ReShade_Centralized
                 Directory.CreateDirectory(screenshots);
                 Directory.CreateDirectory(dlls);
                 Directory.CreateDirectory(mdlls);
-
+                backgroundWorker1.RunWorkerAsync(); //download reshade files
+                backgroundWorker2.RunWorkerAsync(); //download shader files
             }
             else
             {
@@ -107,14 +108,45 @@ namespace ReShade_Centralized
             }
         }
 
-        private void moveShaders()
+        private void moveWithReplace(string source, string dest)
         {
-            
+            if (File.Exists(dest))
+            {
+                File.Delete(dest);
+            }
+
+            File.Move(source, dest);
         }
 
-        private void moveTextures()
+        private void moveFiles(string source, string dest, string[] extensions) //enumerates all files of given extensions in source directory and subdirectories and moves them to dest directory, effectively collapsing folder structure.
         {
+            DirectoryInfo d = new DirectoryInfo(source);
 
+            var files =
+                d.EnumerateFiles("*", SearchOption.AllDirectories)
+                     .Where(f => extensions.Contains(f.Extension.ToLower()))
+                     .ToArray();
+            
+            foreach (var file in files)
+            {
+                moveWithReplace(file.FullName, dest + @"\" + file.Name);
+            }
+        }
+
+        private void extractAllZip(string source, string dest, string[] extensions)
+        {
+            DirectoryInfo d = new DirectoryInfo(source);
+
+            var files =
+                d.EnumerateFiles("*", SearchOption.AllDirectories)
+                     .Where(f => extensions.Contains(f.Extension.ToLower()))
+                     .ToArray();
+
+            foreach (var file in files)
+            {
+                ZipArchiveExtensions.ExtractToDirectory(ZipFile.OpenRead(file.FullName), dest, true);
+            }
+            
         }
 
         //Thank you Andrew Backer of stackoverflow----
@@ -177,28 +209,31 @@ namespace ReShade_Centralized
 
                 string gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
 
+                string workingDLLPath = dlls; //apply working path to variable, mostly for reshade.ini generation
+
                 if (Prompt.ShowRadioButtons(new string[] { "Official", "Modded" }, @"Select Official or Modified ReShade.", 120, 140).Text == "Official")
                 {
                     string temp = Path.GetDirectoryName(gameDialog.FileName) + @"\ReShade64.dll";
                     string temp2 = dlls + @"\ReShade64.dll";
                     if (GetMachineType(gameDialog.FileName) == MachineType.x64)
                     {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, dlls + @"\ReShade64.dll", 0);
+                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
                     }
                     else
                     {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, dlls + @"\ReShade32.dll", 0);
+                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
                     }
                 }
                 else
                 {
+                    workingDLLPath = mdlls;
                     if (GetMachineType(gameDialog.FileName) == MachineType.x64)
                     {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, mdlls + @"\ReShade64.dll", 0);
+                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
                     }
                     else
                     {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, mdlls + @"\ReShade32.dll", 0);
+                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
                     }
                 }
 
@@ -211,6 +246,7 @@ namespace ReShade_Centralized
                     File.WriteAllText(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini",
                         @"[GENERAL]" + nl +
                         @"EffectSearchPaths=" + shaders + nl +
+                        @"IntermediateCachePath=" + workingDLLPath + nl +
                         @"PerformanceMode=0" + nl +
                         @"PreprocessorDefinitions=RESHADE_DEPTH_INPUT_IS_REVERSED=0,RESHADE_DEPTH_INPUT_IS_LOGARITHMIC=0,RESHADE_DEPTH_INPUT_IS_UPSIDE_DOWN=0,RESHADE_DEPTH_LINEARIZATION_FAR_PLANE=1000" + nl +
                         @"PresetPath=" + presets + @"\" + gameName + @"\ReshadePreset.ini" + nl +
@@ -240,7 +276,7 @@ namespace ReShade_Centralized
                         @"TutorialProgress=4" + nl +
                         @"VariableListHeight=300.000000" + nl +
                         @"VariableListUseTabs=0" + nl + nl +
-                        @"[SCREENSHOTS]" + nl +
+                        @"[SCREENSHOT]" + nl +
                         @"ClearAlpha=1" + nl +
                         @"FileFormat=1" + nl +
                         @"FileNamingFormat=0" + nl +
@@ -380,7 +416,7 @@ namespace ReShade_Centralized
         }
 
         //Update Shaders Thread
-        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e) 
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
@@ -390,6 +426,9 @@ namespace ReShade_Centralized
 
             using (var client = new WebClient())
             {
+                bool legacy = false;
+                bool fxshaders = false;
+                bool lunacy = false;
                 Directory.CreateDirectory(@".\temp1375817236");
                 int pbarInc = 100 / (items.Count + 1); //split progress bar increments into how many repos get downloaded + extraction step (and prevents divide by 0)
                 for (int i = 0; i < items.Count; i++)
@@ -410,6 +449,7 @@ namespace ReShade_Centralized
 
                         case "Crosire Legacy":
                             client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", @".\temp1375817236\legacy.zip");
+                            legacy = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
@@ -470,6 +510,7 @@ namespace ReShade_Centralized
 
                         case "FXShaders":
                             client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", @".\temp1375817236\fxshaders.zip");
+                            fxshaders = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
@@ -482,21 +523,72 @@ namespace ReShade_Centralized
 
                         case "Insane Shaders":
                             client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", @".\temp1375817236\insane.zip");
+                            lunacy = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
                     }
                 }
-                //Special cases----------------
-                ZipFile.ExtractToDirectory(@".\temp1375817236\legacy.zip", @".\temp1375817236\legacy\");
+                client.Dispose();
+                string[] shaderExtensions = { ".fx", ".cfg" };
+                string[] textureExtensions = { ".png", ".dds", ".bmp", ".jp*g" };
+
+                //Zip Extraction + Special cases----------------
+
+                //Legacy repo, contains old shaders that have been updated in other repos, but also many shaders that are abandoned.
+                //Move this repo first so that newer repos can overwrite when necessary.
+                if (legacy == true)
+                {
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(@".\temp1375817236\legacy.zip", @".\temp1375817236\legacy");
+                    }
+                    catch
+                    {
+                        Directory.Delete(@".\temp1375817236\legacy", true);
+                        ZipFile.ExtractToDirectory(@".\temp1375817236\legacy.zip", @".\temp1375817236\legacy");
+                    }
+                    File.Delete(@".\temp1375817236\legacy.zip");
+                    File.Delete(@".\temp1375817236\legacy\reshade-shaders-master\Shaders\MXAO.fx"); //outdated mxao, causes issues with quint so delete
+                    moveFiles(@".\temp1375817236\legacy", shaders, shaderExtensions);
+                    moveFiles(@".\temp1375817236\legacy", textures, textureExtensions);
+                }
+
+                extractAllZip(@".\temp1375817236", @".\temp1375817236", new string[] { ".zip" });
+
+                //FXShaders requires additional files in a specific folder, move that folder now.
+                if (fxshaders == true)
+                {
+                    Directory.CreateDirectory(shaders + @"\" + "FXShaders");
+                    try
+                    {
+                        Directory.Move(@".\temp1375817236\FXShaders-master\Shaders\FXShaders", shaders + @"\FXShaders");
+                    }
+                    catch
+                    {
+                        Directory.Delete(shaders + @"\FXShaders", true);
+                        Directory.Move(@".\temp1375817236\FXShaders-master\Shaders\FXShaders", shaders + @"\FXShaders");
+                    }
+                }
+
+                //Lord of Lunacy has folders that contain in-development/deprecated shaders.  Delete those now.
+                if (lunacy == true)
+                {
+                    Directory.Delete(@".\temp1375817236\Insane-Shaders-master\Shaders\DevShaders", true);
+                    Directory.Delete(@".\temp1375817236\Insane-Shaders-master\Shaders\OldShaders", true);
+                }
+
+                //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Move the correct one and delete 
 
                 //End special cases------------
 
-
+                moveFiles(@".\temp1375817236", shaders, shaderExtensions);
+                moveFiles(@".\temp1375817236", textures, textureExtensions);
                 Directory.Delete(@".\temp1375817236", true);
-            }
 
-            worker.ReportProgress(100);
+
+                worker.ReportProgress(100);
+            }
         }
 
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
