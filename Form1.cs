@@ -194,14 +194,14 @@ namespace ReShade_Centralized
                     case "DirectX 9":
                         gamedll = @"\d3d9.dll";
                         break;
-                    case "DirectX 10/11/12":
+                    case "DirectX 10+":
                         gamedll = @"\dxgi.dll";
                         break;
                     case "OpenGL":
                         gamedll = @"\opengl32.dll";
                         break;
                     case "Vulkan":
-                        gamedll = @"reshade-delete-me.dll";
+                        gamedll = @"\reshade-delete-me.dll";
                         MessageBox.Show("Feature coming soon.  For now, install ReShade for Vulkan globally through the normal ReShade installer.  This program will setup the rest.");
                         break;
                 }
