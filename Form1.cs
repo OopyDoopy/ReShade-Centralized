@@ -447,100 +447,106 @@ namespace ReShade_Centralized
                 bool legacy = false;
                 bool fxshaders = false;
                 bool lunacy = false;
-                Directory.CreateDirectory(@".\temp1375817236");
+                var rand = new Random();
+                string randTempRootFolder = @".\temp" + rand.Next().ToString();
+                while (Directory.Exists(randTempRootFolder))
+                {
+                    randTempRootFolder = @".\temp" + rand.Next().ToString();
+                }
+                Directory.CreateDirectory(randTempRootFolder);
                 int pbarInc = 100 / (items.Count + 1); //split progress bar increments into how many repos get downloaded + extraction step (and prevents divide by 0)
                 for (int i = 0; i < items.Count; i++)
                 {
                     switch (items[i])
                     {
                         case "qUINT":
-                            client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", @".\temp1375817236\quint.zip");
+                            client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Crosire":
-                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", @".\temp1375817236\crosire.zip");
+                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", randTempRootFolder + @"\crosire.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Crosire Legacy":
-                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", @".\temp1375817236\legacy.zip");
+                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", randTempRootFolder + @"\legacy.zip");
                             legacy = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "SweetFX":
-                            client.DownloadFile(@"https://github.com/CeeJayDK/SweetFX/archive/master.zip", @".\temp1375817236\sweetfx.zip");
+                            client.DownloadFile(@"https://github.com/CeeJayDK/SweetFX/archive/master.zip", randTempRootFolder + @"\sweetfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "prod80":
-                            client.DownloadFile(@"https://github.com/prod80/prod80-ReShade-Repository/archive/master.zip", @".\temp1375817236\prod80.zip");
+                            client.DownloadFile(@"https://github.com/prod80/prod80-ReShade-Repository/archive/master.zip", randTempRootFolder + @"\prod80.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Depth3D":
-                            client.DownloadFile(@"https://github.com/BlueSkyDefender/Depth3D/archive/master.zip", @".\temp1375817236\depth3d.zip");
+                            client.DownloadFile(@"https://github.com/BlueSkyDefender/Depth3D/archive/master.zip", randTempRootFolder + @"\depth3d.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "AstrayFX":
-                            client.DownloadFile(@"https://github.com/BlueSkyDefender/AstrayFX/archive/master.zip", @".\temp1375817236\astrayfx.zip");
+                            client.DownloadFile(@"https://github.com/BlueSkyDefender/AstrayFX/archive/master.zip", randTempRootFolder + @"\astrayfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "OtisFX":
-                            client.DownloadFile(@"https://github.com/FransBouma/OtisFX/archive/master.zip", @".\temp1375817236\otisfx.zip");
+                            client.DownloadFile(@"https://github.com/FransBouma/OtisFX/archive/master.zip", randTempRootFolder + @"\otisfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Pirate":
-                            client.DownloadFile(@"https://github.com/Heathen/Pirate-Shaders/archive/master.zip", @".\temp1375817236\pirate.zip");
+                            client.DownloadFile(@"https://github.com/Heathen/Pirate-Shaders/archive/master.zip", randTempRootFolder + @"\pirate.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Brussell1":
-                            client.DownloadFile(@"https://github.com/brussell1/Shaders/archive/master.zip", @".\temp1375817236\brussell1.zip");
+                            client.DownloadFile(@"https://github.com/brussell1/Shaders/archive/master.zip", randTempRootFolder + @"\brussell1.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Daodan317081":
-                            client.DownloadFile(@"https://github.com/Daodan317081/reshade-shaders/archive/master.zip", @".\temp1375817236\daodan.zip");
+                            client.DownloadFile(@"https://github.com/Daodan317081/reshade-shaders/archive/master.zip", randTempRootFolder + @"\daodan.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Fubax":
-                            client.DownloadFile(@"https://github.com/Fubaxiusz/fubax-shaders/archive/master.zip", @".\temp1375817236\fubax.zip");
+                            client.DownloadFile(@"https://github.com/Fubaxiusz/fubax-shaders/archive/master.zip", randTempRootFolder + @"\fubax.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "FXShaders":
-                            client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", @".\temp1375817236\fxshaders.zip");
+                            client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", randTempRootFolder + @"\fxshaders.zip");
                             fxshaders = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Radegast FFXIV":
-                            client.DownloadFile(@"https://github.com/Radegast-FFXIV/reshade-shaders/archive/master.zip", @".\temp1375817236\radegast.zip");
+                            client.DownloadFile(@"https://github.com/Radegast-FFXIV/reshade-shaders/archive/master.zip", randTempRootFolder + @"\radegast.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
                         case "Insane Shaders":
-                            client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", @".\temp1375817236\insane.zip");
+                            client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", randTempRootFolder + @"\insane.zip");
                             lunacy = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
@@ -559,50 +565,43 @@ namespace ReShade_Centralized
                 {
                     try
                     {
-                        ZipFile.ExtractToDirectory(@".\temp1375817236\legacy.zip", @".\temp1375817236\legacy");
+                        ZipFile.ExtractToDirectory(randTempRootFolder + @"\legacy.zip", randTempRootFolder + @"\legacy");
                     }
                     catch
                     {
-                        Directory.Delete(@".\temp1375817236\legacy", true);
-                        ZipFile.ExtractToDirectory(@".\temp1375817236\legacy.zip", @".\temp1375817236\legacy");
+                        Directory.Delete(randTempRootFolder + @"\legacy", true);
+                        ZipFile.ExtractToDirectory(randTempRootFolder + @"\legacy.zip", randTempRootFolder + @"\legacy");
                     }
-                    File.Delete(@".\temp1375817236\legacy.zip");
-                    File.Delete(@".\temp1375817236\legacy\reshade-shaders-master\Shaders\MXAO.fx"); //outdated mxao, causes issues with quint so delete
-                    moveFiles(@".\temp1375817236\legacy", shaders, shaderExtensions);
-                    moveFiles(@".\temp1375817236\legacy", textures, textureExtensions);
+                    File.Delete(randTempRootFolder + @"\legacy.zip");
+                    File.Delete(randTempRootFolder + @"\legacy\reshade-shaders-master\Shaders\MXAO.fx"); //outdated mxao, causes issues with quint so delete
+                    moveFiles(randTempRootFolder + @"\legacy", shaders, shaderExtensions);
+                    moveFiles(randTempRootFolder + @"\legacy", textures, textureExtensions);
                 }
 
-                extractAllZip(@".\temp1375817236", @".\temp1375817236", new string[] { ".zip" });
+                //Extract all repos for processing
+                extractAllZip(randTempRootFolder, randTempRootFolder, new string[] { ".zip" });
 
                 //FXShaders requires additional files in a specific folder, move that folder now.
                 if (fxshaders == true)
                 {
                     Directory.CreateDirectory(shaders + @"\" + "FXShaders");
-                    try
-                    {
-                        Directory.Move(@".\temp1375817236\FXShaders-master\Shaders\FXShaders", shaders + @"\FXShaders");
-                    }
-                    catch
-                    {
-                        Directory.Delete(shaders + @"\FXShaders", true);
-                        Directory.Move(@".\temp1375817236\FXShaders-master\Shaders\FXShaders", shaders + @"\FXShaders");
-                    }
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\FXShaders-master\Shaders\FXShaders", shaders + @"\FXShaders");
                 }
 
                 //Lord of Lunacy has folders that contain in-development/deprecated shaders.  Delete those now.
                 if (lunacy == true)
                 {
-                    Directory.Delete(@".\temp1375817236\Insane-Shaders-master\Shaders\DevShaders", true);
-                    Directory.Delete(@".\temp1375817236\Insane-Shaders-master\Shaders\OldShaders", true);
+                    Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\DevShaders", true);
+                    Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\OldShaders", true);
                 }
 
                 //End special cases------------
 
-                copyFiles(@".\temp1375817236", shaders, shaderExtensions);
-                copyFiles(@".\temp1375817236", textures, textureExtensions);
-                File.Copy(@".\temp1375817236\reshade-shaders-slim\Shaders\ReShade.fxh", shaders + @"\ReShade.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
-                File.Copy(@".\temp1375817236\reshade-shaders-slim\Shaders\ReShadeUI.fxh", shaders + @"\ReShadeUI.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
-                Directory.Delete(@".\temp1375817236", true);
+                copyFiles(randTempRootFolder, shaders, shaderExtensions);
+                copyFiles(randTempRootFolder, textures, textureExtensions);
+                File.Copy(randTempRootFolder + @"\reshade-shaders-slim\Shaders\ReShade.fxh", shaders + @"\ReShade.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
+                File.Copy(randTempRootFolder + @"\reshade-shaders-slim\Shaders\ReShadeUI.fxh", shaders + @"\ReShadeUI.fxh", true); //Some repos contain outdated ReShade.fxh/ReShadeUI.fxh files.  Copy the correct one and overwrite.
+                Directory.Delete(randTempRootFolder, true);
 
                 worker.ReportProgress(100);
             }

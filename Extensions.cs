@@ -34,18 +34,24 @@ namespace ReShade_Centralized
 
     public static class DirectoryExtensions
     {
-        public static void MoveAndOverwrite(string source, string dest, bool overwrite)
+        public static void MoveDirectoryOverwrite(string source, string target)
         {
-            if (overwrite == false)
+            var sourcePath = source.TrimEnd('\\', ' ');
+            var targetPath = target.TrimEnd('\\', ' ');
+            var files = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories)
+                                 .GroupBy(s => Path.GetDirectoryName(s));
+            foreach (var folder in files)
             {
-                Directory.Move(source, dest);
-                return;
+                var targetFolder = folder.Key.Replace(sourcePath, targetPath);
+                Directory.CreateDirectory(targetFolder);
+                foreach (var file in folder)
+                {
+                    var targetFile = Path.Combine(targetFolder, Path.GetFileName(file));
+                    if (File.Exists(targetFile)) File.Delete(targetFile);
+                    File.Move(file, targetFile);
+                }
             }
-            //Directory.EnumerateFiles(source, )
-            //foreach (DirectoryInfo info in DirectoryInfo.)
-            //{
-
-            //}
+            Directory.Delete(source, true);
         }
     }
     
