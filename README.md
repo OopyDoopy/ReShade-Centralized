@@ -14,7 +14,7 @@ ReShade Centralized is an installer (made in C# and .NET) meant to replace the o
 - Generally improve UI appearance.
 - Whittle away at potential errors and handle them
 
-## Warning
+## Required Reading
 - First off, any ReShade related issues encountered with this installer should not be reported to Crosire unless replicated with a clean install of the normal installer.  This installer installs the official DLLs straight from the reshade website, but generates the reshade.ini itself.  Future updates to reshade may require a new reshade.ini to be created/updated for full feature functionality.
 
 - **This is pre-release software and it will have bugs.**  This software is heavily IO focused and creates/deletes folders and files regularly.  With each release, I do my best to ensure that only intended files/directories get deleted, but proceed with caution.
