@@ -272,8 +272,10 @@ namespace ReShade_Centralized
 
             if (Prompt.ShowRadioButtons(new string[] { "Official", "Modified" }, @"Select Official or Modified ReShade.", 250, 140, @"Modified ReShade files are self provided.  Place ReShade64.dll and ReShade32.dll in the reshade-files-mod folder to use.").Text == "Official")
             {
-                string temp = Path.GetDirectoryName(gameDialog.FileName) + @"\ReShade64.dll";
-                string temp2 = dlls + @"\ReShade64.dll";
+                if(File.Exists(Path.GetDirectoryName(gameDialog.FileName) + gamedll)) //placed here and duplicated in Else{} just in case the user closes the application when prompted
+                {
+                    File.Delete(Path.GetDirectoryName(gameDialog.FileName) + gamedll);
+                }
                 if (GetMachineType(gameDialog.FileName) == MachineType.x64)
                 {
                     SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
@@ -285,6 +287,10 @@ namespace ReShade_Centralized
             }
             else
             {
+                if (File.Exists(Path.GetDirectoryName(gameDialog.FileName) + gamedll))
+                {
+                    File.Delete(Path.GetDirectoryName(gameDialog.FileName) + gamedll);
+                }
                 workingDLLPath = mdlls;
                 if (GetMachineType(gameDialog.FileName) == MachineType.x64)
                 {
