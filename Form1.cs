@@ -36,12 +36,12 @@ namespace ReShade_Centralized
             InitializeComponent();
             if (!File.Exists("ReShadeCentralized.ini"))
             {
-                MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade folder.", "First Time Startup Message");
+                MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
                 CommonOpenFileDialog centralizedDialog = new CommonOpenFileDialog();
                 centralizedDialog.Title = "Create and/or Select your ReShade Centralized folder";
                 centralizedDialog.IsFolderPicker = true;
                 centralizedDialog.InitialDirectory = @"C:\";
-                centralizedDialog.ShowDialog();
+                centralizedDialog = getUserDirectoryCommon(centralizedDialog);
                 using (StreamWriter w = new StreamWriter("ReShadeCentralized.ini"))
                 {
                     w.WriteLine("[paths]");
@@ -108,6 +108,42 @@ namespace ReShade_Centralized
                 }
                 r.Close();
             }
+        }
+
+        private CommonOpenFileDialog getUserDirectoryCommon(CommonOpenFileDialog dir)
+        {
+            bool exitLoop = false;
+            while (exitLoop == false)
+            {
+                CommonFileDialogResult result = dir.ShowDialog();
+                if (!(result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(dir.FileName)))
+                {
+                    MessageBox.Show("You must select a valid directory, try again");
+                }
+                else
+                {
+                    exitLoop = true;
+                }
+            }
+            return dir;
+        }
+
+        private OpenFileDialog getUserDirectory(OpenFileDialog dir)
+        {
+            bool exitLoop = false;
+            while (exitLoop == false)
+            {
+                DialogResult result = dir.ShowDialog();
+                if (!(result == DialogResult.OK && !string.IsNullOrWhiteSpace(dir.FileName)))
+                {
+                    MessageBox.Show("You must select a valid file, try again");
+                }
+                else
+                {
+                    exitLoop = true;
+                }
+            }
+            return dir;
         }
 
         private void moveWithReplace(string source, string dest)
@@ -197,152 +233,157 @@ namespace ReShade_Centralized
 
         private void installwin32_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog gameDialog = new OpenFileDialog())
+            OpenFileDialog gameDialog = new OpenFileDialog();
+
+            gameDialog.Title = "Select the game's runtime executable.";
+            gameDialog.Filter = "Select EXE|*.exe";
+            gameDialog.InitialDirectory = @"C:\";
+            gameDialog = getUserDirectory(gameDialog);
+
+
+            string gamedll = System.String.Empty;
+
+            switch ((Prompt.ShowRadioButtons(new string[] { @"DirectX 9", @"DirectX 10+", @"OpenGL", @"Vulkan" }, "Select the Rendering API.", 200, 200)).Text)
             {
-                gameDialog.Title = "Select the game's runtime executable.";
-                gameDialog.Filter = "Select EXE|*.exe";
-                gameDialog.InitialDirectory = @"C:\";
-                gameDialog.ShowDialog();
-                //File.OpenRead(gameDialog.FileName);
-
-                string gamedll = System.String.Empty;
-
-                switch ((Prompt.ShowRadioButtons(new string[] { @"DirectX 9", @"DirectX 10+", @"OpenGL", @"Vulkan" }, "Select the Rendering API.", 200, 200)).Text)
-                {
-                    case "DirectX 9":
-                        gamedll = @"\d3d9.dll";
-                        break;
-                    case "DirectX 10+":
-                        gamedll = @"\dxgi.dll";
-                        break;
-                    case "OpenGL":
-                        gamedll = @"\opengl32.dll";
-                        break;
-                    case "Vulkan":
-                        gamedll = @"\reshade-delete-me.dll";
-                        MessageBox.Show("Feature coming soon.  For now, install ReShade for Vulkan globally through the normal ReShade installer.  This program will setup the rest.");
-                        break;
-                }
-
-
-                string gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
-
-                string workingDLLPath = dlls; //apply working path to variable, mostly for reshade.ini generation
-
-                if (Prompt.ShowRadioButtons(new string[] { "Official", "Modded" }, @"Select Official or Modified ReShade.", 120, 140).Text == "Official")
-                {
-                    string temp = Path.GetDirectoryName(gameDialog.FileName) + @"\ReShade64.dll";
-                    string temp2 = dlls + @"\ReShade64.dll";
-                    if (GetMachineType(gameDialog.FileName) == MachineType.x64)
-                    {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
-                    }
-                    else
-                    {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
-                    }
-                }
-                else
-                {
-                    workingDLLPath = mdlls;
-                    if (GetMachineType(gameDialog.FileName) == MachineType.x64)
-                    {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
-                    }
-                    else
-                    {
-                        SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
-                    }
-                }
-
-                Directory.CreateDirectory(screenshots + @"\" + gameName);
-                Directory.CreateDirectory(presets + @"\" + gameName);
-
-                string nl = "\n";
-                if (!File.Exists(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini"))
-                {
-                    File.WriteAllText(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini",
-                        @"[GENERAL]" + nl +
-                        @"EffectSearchPaths=" + shaders + nl +
-                        @"IntermediateCachePath=" + workingDLLPath + @"\Cache" + nl +
-                        @"PerformanceMode=0" + nl +
-                        @"PreprocessorDefinitions=RESHADE_DEPTH_INPUT_IS_REVERSED=0,RESHADE_DEPTH_INPUT_IS_LOGARITHMIC=0,RESHADE_DEPTH_INPUT_IS_UPSIDE_DOWN=0,RESHADE_DEPTH_LINEARIZATION_FAR_PLANE=1000" + nl +
-                        @"PresetPath=" + presets + @"\" + gameName + @"\ReshadePreset.ini" + nl +
-                        @"PresetTransitionDelay=1000" + nl +
-                        @"SkipLoadingDisabledEffects=0" + nl +
-                        @"TextureSearchPaths=" + textures + nl + nl +
-                        @"[INPUT]" + nl +
-                        @"ForceShortcutModifiers=1" + nl +
-                        @"InputProcessing=2" + nl +
-                        @"KeyEffects=145,0,0,0" + nl +
-                        @"KeyNextPreset=0,0,0,0" + nl +
-                        @"KeyOverlay=36,0,0,0" + nl +
-                        @"KeyPerformanceMode=0,0,0,0" + nl +
-                        @"KeyPreviousPreset=0,0,0,0" + nl +
-                        @"KeyReload=0,0,0,0" + nl +
-                        @"KeyScreenshot=44,0,0,0" + nl + nl +
-                        @"[OVERLAY]" + nl +
-                        @"ClockFormat=0" + nl +
-                        @"FPSPosition=1" + nl +
-                        @"NoFontScaling=1" + nl +
-                        @"SaveWindowState=0" + nl +
-                        @"ShowClock=0" + nl +
-                        @"ShowForceLoadEffectsButton=1" + nl +
-                        @"ShowFPS=0" + nl +
-                        @"ShowFrameTime=0" + nl +
-                        @"ShowScreenshotMessage=1" + nl +
-                        @"TutorialProgress=4" + nl +
-                        @"VariableListHeight=300.000000" + nl +
-                        @"VariableListUseTabs=0" + nl + nl +
-                        @"[SCREENSHOT]" + nl +
-                        @"ClearAlpha=1" + nl +
-                        @"FileFormat=1" + nl +
-                        @"FileNamingFormat=0" + nl +
-                        @"JPEGQuality=90" + nl +
-                        @"SaveBeforeShot=1" + nl +
-                        @"SaveOverlayShot=0" + nl +
-                        @"SavePath=" + screenshots + @"\" + gameName + nl +
-                        @"SavePresetFile=0" + nl + nl +
-                        @"[STYLE]" + nl +
-                        @"Alpha=1.000000" + nl +
-                        @"ChildRounding=0.000000" + nl +
-                        @"ColFPSText=1.000000,1.000000,0.784314,1.000000" + nl +
-                        @"EditorFont=ProggyClean.ttf" + nl +
-                        @"EditorFontSize=13" + nl +
-                        @"EditorStyleIndex=0" + nl +
-                        @"Font=ProggyClean.ttf" + nl +
-                        @"FontSize=13" + nl +
-                        @"FPSScale=1.000000" + nl +
-                        @"FrameRounding=0.000000" + nl +
-                        @"GrabRounding=0.000000" + nl +
-                        @"PopupRounding=0.000000" + nl +
-                        @"ScrollbarRounding=0.000000" + nl +
-                        @"StyleIndex=2" + nl +
-                        @"TabRounding=4.000000" + nl +
-                        @"WindowRounding=0.000000"
-                     );
-                }
-                else
-                {
-                    MessageBox.Show("reshade.ini detected.  File has not been overwritten.");
-                }
-
-
-                if (!File.Exists(presets + @"\" + gameName + @"\ReshadePreset.ini"))
-                {
-                    File.WriteAllText(presets + @"\" + gameName + @"\ReshadePreset.ini",
-                        @"PreprocessorDefinitions=" + nl +
-                        @"Techniques=" + nl +
-                        @"TechniqueSorting=DisplayDepth"
-                    );
-                 }
-                else
-                {
-                    MessageBox.Show("ReshadePreset.ini detected.  File has not been overwritten.");
-                }
-
-                MessageBox.Show("ReShade Successfully Installed!");
+                case "DirectX 9":
+                    gamedll = @"\d3d9.dll";
+                    break;
+                case "DirectX 10+":
+                    gamedll = @"\dxgi.dll";
+                    break;
+                case "OpenGL":
+                    gamedll = @"\opengl32.dll";
+                    break;
+                case "Vulkan":
+                    gamedll = @"\reshade-delete-me.dll";
+                    MessageBox.Show("Feature coming soon.  For now, install ReShade for Vulkan globally through the normal ReShade installer.  This program will setup the rest.");
+                    break;
             }
+
+
+            string gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
+            while (string.IsNullOrEmpty(gameName))
+            {
+                MessageBox.Show("Game Name can't be blank, try again.");
+                gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
+            }
+
+            string workingDLLPath = dlls; //apply working path to variable, mostly for reshade.ini generation
+
+            if (Prompt.ShowRadioButtons(new string[] { "Official", "Modified" }, @"Select Official or Modified ReShade.", 250, 140, @"Modified ReShade files are self provided.  Place ReShade64.dll and ReShade32.dll in the reshade-files-mod folder to use.").Text == "Official")
+            {
+                string temp = Path.GetDirectoryName(gameDialog.FileName) + @"\ReShade64.dll";
+                string temp2 = dlls + @"\ReShade64.dll";
+                if (GetMachineType(gameDialog.FileName) == MachineType.x64)
+                {
+                    SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
+                }
+                else
+                {
+                    SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
+                }
+            }
+            else
+            {
+                workingDLLPath = mdlls;
+                if (GetMachineType(gameDialog.FileName) == MachineType.x64)
+                {
+                    SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade64.dll", 0);
+                }
+                else
+                {
+                    SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + gamedll, workingDLLPath + @"\ReShade32.dll", 0);
+                }
+            }
+
+            Directory.CreateDirectory(screenshots + @"\" + gameName);
+            Directory.CreateDirectory(presets + @"\" + gameName);
+
+            string nl = "\n";
+            if (!File.Exists(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini"))
+            {
+                File.WriteAllText(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini",
+                    @"[GENERAL]" + nl +
+                    @"EffectSearchPaths=" + shaders + nl +
+                    @"IntermediateCachePath=" + workingDLLPath + @"\Cache" + nl +
+                    @"PerformanceMode=0" + nl +
+                    @"PreprocessorDefinitions=RESHADE_DEPTH_INPUT_IS_REVERSED=0,RESHADE_DEPTH_INPUT_IS_LOGARITHMIC=0,RESHADE_DEPTH_INPUT_IS_UPSIDE_DOWN=0,RESHADE_DEPTH_LINEARIZATION_FAR_PLANE=1000" + nl +
+                    @"PresetPath=" + presets + @"\" + gameName + @"\ReshadePreset.ini" + nl +
+                    @"PresetTransitionDelay=1000" + nl +
+                    @"SkipLoadingDisabledEffects=0" + nl +
+                    @"TextureSearchPaths=" + textures + nl + nl +
+                    @"[INPUT]" + nl +
+                    @"ForceShortcutModifiers=1" + nl +
+                    @"InputProcessing=2" + nl +
+                    @"KeyEffects=145,0,0,0" + nl +
+                    @"KeyNextPreset=0,0,0,0" + nl +
+                    @"KeyOverlay=36,0,0,0" + nl +
+                    @"KeyPerformanceMode=0,0,0,0" + nl +
+                    @"KeyPreviousPreset=0,0,0,0" + nl +
+                    @"KeyReload=0,0,0,0" + nl +
+                    @"KeyScreenshot=44,0,0,0" + nl + nl +
+                    @"[OVERLAY]" + nl +
+                    @"ClockFormat=0" + nl +
+                    @"FPSPosition=1" + nl +
+                    @"NoFontScaling=1" + nl +
+                    @"SaveWindowState=0" + nl +
+                    @"ShowClock=0" + nl +
+                    @"ShowForceLoadEffectsButton=1" + nl +
+                    @"ShowFPS=0" + nl +
+                    @"ShowFrameTime=0" + nl +
+                    @"ShowScreenshotMessage=1" + nl +
+                    @"TutorialProgress=4" + nl +
+                    @"VariableListHeight=300.000000" + nl +
+                    @"VariableListUseTabs=0" + nl + nl +
+                    @"[SCREENSHOT]" + nl +
+                    @"ClearAlpha=1" + nl +
+                    @"FileFormat=1" + nl +
+                    @"FileNamingFormat=0" + nl +
+                    @"JPEGQuality=90" + nl +
+                    @"SaveBeforeShot=1" + nl +
+                    @"SaveOverlayShot=0" + nl +
+                    @"SavePath=" + screenshots + @"\" + gameName + nl +
+                    @"SavePresetFile=0" + nl + nl +
+                    @"[STYLE]" + nl +
+                    @"Alpha=1.000000" + nl +
+                    @"ChildRounding=0.000000" + nl +
+                    @"ColFPSText=1.000000,1.000000,0.784314,1.000000" + nl +
+                    @"EditorFont=ProggyClean.ttf" + nl +
+                    @"EditorFontSize=13" + nl +
+                    @"EditorStyleIndex=0" + nl +
+                    @"Font=ProggyClean.ttf" + nl +
+                    @"FontSize=13" + nl +
+                    @"FPSScale=1.000000" + nl +
+                    @"FrameRounding=0.000000" + nl +
+                    @"GrabRounding=0.000000" + nl +
+                    @"PopupRounding=0.000000" + nl +
+                    @"ScrollbarRounding=0.000000" + nl +
+                    @"StyleIndex=2" + nl +
+                    @"TabRounding=4.000000" + nl +
+                    @"WindowRounding=0.000000"
+                 );
+            }
+            else
+            {
+                MessageBox.Show("reshade.ini detected.  File has not been overwritten.");
+            }
+
+
+            if (!File.Exists(presets + @"\" + gameName + @"\ReshadePreset.ini"))
+            {
+                File.WriteAllText(presets + @"\" + gameName + @"\ReshadePreset.ini",
+                    @"PreprocessorDefinitions=" + nl +
+                    @"Techniques=" + nl +
+                    @"TechniqueSorting=DisplayDepth"
+                );
+            }
+            else
+            {
+                MessageBox.Show("ReshadePreset.ini detected.  File has not been overwritten.");
+            }
+
+            MessageBox.Show("ReShade Successfully Installed!");
+
         }
 
         private void custsetup_Click(object sender, EventArgs e)
@@ -440,7 +481,7 @@ namespace ReShade_Centralized
 
             worker.ReportProgress(0);
 
-            var items = Prompt.ShowCheckBoxes(new string[] { "qUINT", "Crosire", "Crosire Legacy", "SweetFX", "prod80", "Depth3D", "AstrayFX", "OtisFX", "Pirate", "Brussell1", "Daodan317081", "Fubax", "FXShaders", "Radegast FFXIV", "Insane Shaders" }, @"Select shader repos to download.", 200, 400).CheckedItems;
+            var items = Prompt.ShowCheckBoxes(new string[] { "qUINT - Marty McFly", "Standard - Crosire", "Legacy - Crosire", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
 
             using (var client = new WebClient())
             {
@@ -459,93 +500,100 @@ namespace ReShade_Centralized
                 {
                     switch (items[i])
                     {
-                        case "qUINT":
+                        case "qUINT - Marty McFly":
                             client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Crosire":
+                        case "Standard - Crosire":
                             client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", randTempRootFolder + @"\crosire.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Crosire Legacy":
+                        case "Legacy - Crosire":
                             client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", randTempRootFolder + @"\legacy.zip");
                             legacy = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "SweetFX":
+                        case "SweetFX - CeeJayDK":
                             client.DownloadFile(@"https://github.com/CeeJayDK/SweetFX/archive/master.zip", randTempRootFolder + @"\sweetfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "prod80":
+                        case "Color Effects - prod80":
                             client.DownloadFile(@"https://github.com/prod80/prod80-ReShade-Repository/archive/master.zip", randTempRootFolder + @"\prod80.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Depth3D":
+                        case "Depth3D - BlueSkyDefender":
                             client.DownloadFile(@"https://github.com/BlueSkyDefender/Depth3D/archive/master.zip", randTempRootFolder + @"\depth3d.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "AstrayFX":
+                        case "AstrayFX - BlueSkyDefender":
                             client.DownloadFile(@"https://github.com/BlueSkyDefender/AstrayFX/archive/master.zip", randTempRootFolder + @"\astrayfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "OtisFX":
+                        case "OtisFX - Otis Inf":
                             client.DownloadFile(@"https://github.com/FransBouma/OtisFX/archive/master.zip", randTempRootFolder + @"\otisfx.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Pirate":
+                        case "Pirate Shaders - Heathen":
                             client.DownloadFile(@"https://github.com/Heathen/Pirate-Shaders/archive/master.zip", randTempRootFolder + @"\pirate.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Brussell1":
+                        case "Shaders - Brussell1":
                             client.DownloadFile(@"https://github.com/brussell1/Shaders/archive/master.zip", randTempRootFolder + @"\brussell1.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Daodan317081":
+                        case "Shaders - Daodan317081":
                             client.DownloadFile(@"https://github.com/Daodan317081/reshade-shaders/archive/master.zip", randTempRootFolder + @"\daodan.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Fubax":
+                        case "CorgiFX - originalnicoder":
+                            client.DownloadFile(@"https://github.com/originalnicodr/CorgiFX/archive/master.zip", randTempRootFolder + @"\corgifx.zip");
+                            worker.ReportProgress(pbarInc);
+                            pbarInc += pbarInc;
+                            break;
+                            
+
+                        case "Fubax - Fubaxiusz":
                             client.DownloadFile(@"https://github.com/Fubaxiusz/fubax-shaders/archive/master.zip", randTempRootFolder + @"\fubax.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "FXShaders":
+                        case "FXShaders - luluco250":
                             client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", randTempRootFolder + @"\fxshaders.zip");
                             fxshaders = true;
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Radegast FFXIV":
+                        case "Shaders - Radegast":
                             client.DownloadFile(@"https://github.com/Radegast-FFXIV/reshade-shaders/archive/master.zip", randTempRootFolder + @"\radegast.zip");
                             worker.ReportProgress(pbarInc);
                             pbarInc += pbarInc;
                             break;
 
-                        case "Insane Shaders":
+                        case "Insane Shaders - Lord of Lunacy":
                             client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", randTempRootFolder + @"\insane.zip");
                             lunacy = true;
                             worker.ReportProgress(pbarInc);

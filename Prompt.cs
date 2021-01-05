@@ -32,7 +32,7 @@ namespace ReShade_Centralized
             return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
         }
 
-        public static RadioButton ShowRadioButtons(string[] options, string caption, int w, int h)
+        public static RadioButton ShowRadioButtons(string[] options, string caption, int w, int h, string label = "")
         {
             Form prompt = new Form()
             {
@@ -56,10 +56,11 @@ namespace ReShade_Centralized
                 if (i == 0) { pnl.Controls.Add(new RadioButton() { Text = options[i], Checked = true }); }
                 else { pnl.Controls.Add(new RadioButton() { Text = options[i] }); }
             }
-            
-            
+
+            Label description = new Label() { Text = label, AutoSize = true };
             Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
+            pnl.Controls.Add(description);
             pnl.Controls.Add(confirmation);
             prompt.AcceptButton = confirmation;
             prompt.Controls.Add(pnl);
