@@ -18,3 +18,6 @@ ReShade Centralized is an installer (made in C# and .NET) meant to replace the o
 - First off, any ReShade related issues encountered with this installer should not be reported to Crosire unless replicated with a clean install of the normal installer.  This installer installs the official DLLs straight from the reshade website, but generates the reshade.ini itself.  Future updates to reshade may require a new reshade.ini to be created/updated for full feature functionality.
 
 - **This is pre-release software and it will have bugs.**  While I have worked hard to prevent the possibility of deleting uninteded data, I will not be held responsible for any loss of data that could result from the use of this software, as incredibly unlikely as it may be.  If this is a grave concern, the code is available to read.
+
+## Donation Link
+<a href="https://www.buymeacoffee.com/oopydoopy" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
