@@ -4,7 +4,8 @@ ReShade Centralized is an installer (made in C# and .NET) meant to replace the o
 
 ## Features:
 - Install ReShade and deploy .dlls as symlinks (this is why the program needs admin privileges)
-- Download/Update a central shader respository.
+- Supports installing official ReShade dll files or modified ones
+- Download/Update a central shader respository and create all necessary preset and screenshot folders
 - Generate reshade.ini file based on the ReShade Centralized folder you set.
 
 ## Planned Improvements:
