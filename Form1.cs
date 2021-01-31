@@ -23,13 +23,20 @@ namespace ReShade_Centralized
 
     public partial class Form1 : Form
     {
-
+        //paths for centralized folders
         string shaders = System.String.Empty;
         string textures = System.String.Empty;
-        string presets = System.String.Empty;
+        string presets = System.String.Empty; //also reshade config folder
         string screenshots = System.String.Empty;
         string dlls = System.String.Empty;
         string mdlls = System.String.Empty;
+        List<iniEntry> games = new List<iniEntry>();
+
+        struct iniEntry
+        {
+            public string value; //string on line
+            public int ln; //line number
+        }
 
         public Form1()
         {
@@ -54,7 +61,7 @@ namespace ReShade_Centralized
 
                     w.Close();
                 }
-                readini();
+                readIni();
                 Directory.CreateDirectory(shaders);
                 Directory.CreateDirectory(textures);
                 Directory.CreateDirectory(presets);
@@ -68,46 +75,98 @@ namespace ReShade_Centralized
             }
             else
             {
-                readini();
+                readIni();
             }
 
         }
         //Helper Functions-------------------------------------------------------------
-        private void readini()
+        private void readIni()
         {
             using (StreamReader r = new StreamReader("ReShadeCentralized.ini"))
             {
-                List<string> configfile = new List<string>();
-                while (!r.EndOfStream)
+                //List<string> configfile = new List<string>();
+                Regex rx = new Regex(@"\[.*\]");
+                //int i = 0;
+                int lineNum = 0;
+                while (r.EndOfStream == false)
                 {
-                    string line = r.ReadLine();
-                    if (line.StartsWith("shaders="))
+                    iniEntry line = new iniEntry();
+                    line.value = r.ReadLine();
+                    
+                    lineNum++;
+                    if (line.value == "[paths]")
                     {
-                        shaders = line.Substring(8);
+                        line.value = r.ReadLine();
+                        lineNum++;
+                        while (!r.EndOfStream || !rx.IsMatch(line.value))
+                        {
+                            if (line.value.StartsWith("shaders="))
+                            {
+                                shaders = line.value.Substring(8);
+                            }
+                            else if (line.value.StartsWith("textures="))
+                            {
+                                textures = line.value.Substring(9);
+                            }
+                            else if (line.value.StartsWith("presets="))
+                            {
+                                presets = line.value.Substring(8);
+                            }
+                            else if (line.value.StartsWith("screenshots="))
+                            {
+                                screenshots = line.value.Substring(12);
+                            }
+                            else if (line.value.StartsWith("dlls="))
+                            {
+                                dlls = line.value.Substring(5);
+                            }
+                            else if (line.value.StartsWith("mdlls="))
+                            {
+                                mdlls = line.value.Substring(6);
+                            }
+                            line.value = r.ReadLine();
+                            lineNum++;
+                            //while (String.IsNullOrEmpty(line.value) && !r.EndOfStream)
+                            //{
+                            //    line.value = r.ReadLine();
+                            //    lineNum++;
+                            //}
+
+                        }
                     }
-                    else if (line.StartsWith("textures="))
+                    else if (line.value == "[games]")
                     {
-                        textures = line.Substring(9);
-                    }
-                    else if (line.StartsWith("presets="))
-                    {
-                        presets = line.Substring(8);
-                    }
-                    else if (line.StartsWith("screenshots="))
-                    {
-                        screenshots = line.Substring(12);
-                    }
-                    else if (line.StartsWith("dlls="))
-                    {
-                        dlls = line.Substring(5);
-                    }
-                    else if (line.StartsWith("mdlls="))
-                    {
-                        mdlls = line.Substring(6);
+                        line.value = r.ReadLine();
+                        lineNum++;
+                        while (!r.EndOfStream || !rx.IsMatch(line.value))
+                        {
+                            line.ln = lineNum;
+                            games.Add(line);
+                            //i++;
+                            line.value = r.ReadLine();
+                            lineNum++;
+                        }
                     }
                 }
                 r.Close();
             }
+        }
+
+        private void writeGameIni(string game, string path, bool append = true) //WORK IN PROGRESS
+        {
+            if (append == true)
+            {
+                using (StreamWriter w = new StreamWriter("ReShadeCentralized.ini", true))
+                {
+                    w.WriteLine(game + "=" + path);
+                    w.Close();
+                }
+            }
+            else
+            {
+                
+            }
+
         }
 
         private CommonOpenFileDialog getUserDirectoryCommon(CommonOpenFileDialog dir)
@@ -306,9 +365,9 @@ namespace ReShade_Centralized
             Directory.CreateDirectory(presets + @"\" + gameName);
 
             string nl = "\n";
-            if (!File.Exists(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini"))
+            if (!File.Exists(presets + @"\" + gameName + @"\reshade.ini"))
             {
-                File.WriteAllText(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini",
+                File.WriteAllText(presets + @"\" + gameName + @"\reshade.ini",
                     @"[GENERAL]" + nl +
                     @"EffectSearchPaths=" + shaders + nl +
                     @"IntermediateCachePath=" + workingDLLPath + @"\Cache" + nl +
@@ -368,6 +427,7 @@ namespace ReShade_Centralized
                     @"TabRounding=4.000000" + nl +
                     @"WindowRounding=0.000000"
                  );
+                SymbolicLink.CreateSymbolicLink(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini", presets + @"\" + gameName + @"\reshade.ini", 0);
             }
             else
             {
