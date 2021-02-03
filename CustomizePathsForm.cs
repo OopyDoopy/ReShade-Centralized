@@ -63,7 +63,7 @@ namespace ReShade_Centralized
                 return;
             }
             this.Focus();
-            Program.shaders = getDir.FileName;
+            Program.presets = getDir.FileName;
             Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "presets=" }, new List<string> { Program.presets });
             Functions.readRCIni();
             DirectoryExtensions.MoveDirectoryOverwrite(curdir, getDir.FileName);
@@ -84,7 +84,7 @@ namespace ReShade_Centralized
                 return;
             }
             this.Focus();
-            Program.shaders = getDir.FileName;
+            Program.screenshots = getDir.FileName;
             Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "screenshots=" }, new List<string> { Program.screenshots });
             Functions.readRCIni();
             DirectoryExtensions.MoveDirectoryOverwrite(curdir, getDir.FileName);
