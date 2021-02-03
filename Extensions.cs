@@ -8,6 +8,7 @@ using System.IO.Compression;
 
 namespace ReShade_Centralized
 {
+    //"Extensions" to common libraries within C# that add additional generic functionality that can be useful for any project.
     public static class ZipArchiveExtensions
     {
         public static void ExtractToDirectory(this ZipArchive archive, string destinationDirectoryName, bool overwrite)

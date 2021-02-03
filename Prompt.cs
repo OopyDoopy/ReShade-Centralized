@@ -82,7 +82,8 @@ namespace ReShade_Centralized
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
-                ControlBox = false
+                ControlBox = false,
+                
             };
             FlowLayoutPanel pnl = new FlowLayoutPanel
             {
