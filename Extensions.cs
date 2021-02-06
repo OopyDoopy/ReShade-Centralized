@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace ReShade_Centralized
 {
@@ -42,8 +38,8 @@ namespace ReShade_Centralized
             //files;
             try
             {
-               var files = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories)
-                                                 .GroupBy(s => Path.GetDirectoryName(s));
+                var files = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories)
+                                                  .GroupBy(s => Path.GetDirectoryName(s));
                 foreach (var folder in files)
                 {
                     var targetFolder = folder.Key.Replace(sourcePath, targetPath);
@@ -63,5 +59,5 @@ namespace ReShade_Centralized
             }
         }
     }
-    
+
 }

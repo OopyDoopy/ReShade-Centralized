@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows.Forms;
 
 namespace ReShade_Centralized
@@ -42,7 +38,7 @@ namespace ReShade_Centralized
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
                 ControlBox = false
-        };
+            };
             FlowLayoutPanel pnl = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -83,7 +79,7 @@ namespace ReShade_Centralized
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
                 ControlBox = false,
-                
+
             };
             FlowLayoutPanel pnl = new FlowLayoutPanel
             {

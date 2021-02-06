@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace ReShade_Centralized
 {
@@ -25,41 +23,88 @@ namespace ReShade_Centralized
                     lineNum++;
                     if (line.value.StartsWith("shaders="))
                     {
-                        Program.shaders = line.value.Substring(8);
+                        try
+                        {
+                            Program.shaders = Path.GetFullPath(line.value.Substring(8));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid shaders path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                     else if (line.value.StartsWith("textures="))
                     {
-                        Program.textures = line.value.Substring(9);
+                        try
+                        {
+                            Program.textures = Path.GetFullPath(line.value.Substring(9));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid textures path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                     else if (line.value.StartsWith("presets="))
                     {
-                        Program.presets = line.value.Substring(8);
+                        try
+                        {
+                            Program.presets = Path.GetFullPath(line.value.Substring(8));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid presets path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                     else if (line.value.StartsWith("screenshots="))
                     {
-                        Program.screenshots = line.value.Substring(12);
+                        try
+                        {
+                            Program.screenshots = Path.GetFullPath(line.value.Substring(12));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid screenshots path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                     else if (line.value.StartsWith("dlls="))
                     {
-                        Program.dlls = line.value.Substring(5);
+                        try
+                        {
+                            Program.dlls = Path.GetFullPath(line.value.Substring(5));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid dlls path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                     else if (line.value.StartsWith("mdlls="))
                     {
-                        Program.mdlls = line.value.Substring(6);
+                        try
+                        {
+                            Program.mdlls = Path.GetFullPath(line.value.Substring(6));
+                        }
+                        catch
+                        {
+                            MessageBox.Show(@"Fatal Error: Invalid mdlls path in ReShadeCentralized.ini.  Manually fix the path and try running again.");
+                            Application.Exit();
+                        }
                     }
                 }
                 r.Close();
             }
-
         }
-    
-    public static void overwriteIni(string path, List<string> var, List<string> value)
+
+        public static void overwriteIni(string path, List<string> var, List<string> value)
         {
             //Read file into memory
             List<string> file = new List<string>();
             using (StreamReader r = new StreamReader(path))
             {
-                while(!r.EndOfStream)
+                while (!r.EndOfStream)
                 {
                     file.Add(r.ReadLine());
                 }
@@ -69,7 +114,7 @@ namespace ReShade_Centralized
             {
                 int filecount = file.Count;
                 int varcount = var.Count; //var and value will always be the same size
-                for(int i = 0; i < filecount; i++)
+                for (int i = 0; i < filecount; i++)
                 {
                     for (int j = 0; j < varcount; j++)
                     {
@@ -99,7 +144,7 @@ namespace ReShade_Centralized
                 }
             }
             return dir;
-            
+
         }
 
         //public static OpenFileDialog getUserDirectory(OpenFileDialog dir)

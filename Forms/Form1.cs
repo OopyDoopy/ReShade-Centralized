@@ -1,20 +1,12 @@
-﻿using System;
+﻿using SevenZipExtractor;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows.Forms;
 using System.IO;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO.Compression;
 using System.Net;
 using System.Text.RegularExpressions;
-using SevenZipExtractor;
-using System.Runtime.InteropServices;
-using System.IO.Compression;
+using System.Windows.Forms;
 
 
 namespace ReShade_Centralized
@@ -35,15 +27,8 @@ namespace ReShade_Centralized
                 MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
                 FirstTimeSetup startup = new FirstTimeSetup();
                 startup.ShowDialog();
-                //MessageBox.Show(startup.Text);
                 Directory.CreateDirectory(startup.Text);
 
-                //MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
-                //CommonOpenFileDialog centralizedDialog = new CommonOpenFileDialog();
-                //centralizedDialog.Title = "Create and/or Select your ReShade Centralized folder";
-                //centralizedDialog.IsFolderPicker = true;
-                //centralizedDialog.InitialDirectory = @"C:\";
-                //centralizedDialog = Functions.getUserDirectoryCommon(centralizedDialog);
                 using (StreamWriter w = new StreamWriter("ReShadeCentralized.ini"))
                 {
                     w.WriteLine("[paths]");
@@ -87,9 +72,9 @@ namespace ReShade_Centralized
             gameDialog.Title = "Select the game's runtime executable.";
             gameDialog.Filter = "Select EXE|*.exe";
             gameDialog.InitialDirectory = @"C:\";
-            if (gameDialog.ShowDialog() != DialogResult.OK) 
-            { 
-                return; 
+            if (gameDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
             }
 
 
@@ -601,6 +586,6 @@ namespace ReShade_Centralized
             f.Show();
         }
 
-        
+
     }
 }
