@@ -57,6 +57,7 @@ namespace ReShade_Centralized
             {
                 Functions.readRCIni();
             }
+            backgroundWorker4.RunWorkerAsync(); //Check for updates
         }
 
 
@@ -295,112 +296,232 @@ namespace ReShade_Centralized
                 Directory.CreateDirectory(randTempRootFolder);
                 int pbarInc = 100 / (items.Count + 1); //split progress bar increments into how many repos get downloaded + extraction step (and prevents divide by 0)
                 int pbarValue = 0;
+                string dlFail = @"Download failed for "; //just to save me time typing if I want to change the wording
                 for (int i = 0; i < items.Count; i++)
                 {
                     switch (items[i])
                     {
                         case "qUINT - Marty McFly":
-                            client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Standard - Crosire":
-                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", randTempRootFolder + @"\crosire.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", randTempRootFolder + @"\crosire.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Legacy - Crosire":
-                            client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", randTempRootFolder + @"\legacy.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", randTempRootFolder + @"\legacy.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             legacy = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "SweetFX - CeeJayDK":
-                            client.DownloadFile(@"https://github.com/CeeJayDK/SweetFX/archive/master.zip", randTempRootFolder + @"\sweetfx.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/CeeJayDK/SweetFX/archive/master.zip", randTempRootFolder + @"\sweetfx.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Color Effects - prod80":
-                            client.DownloadFile(@"https://github.com/prod80/prod80-ReShade-Repository/archive/master.zip", randTempRootFolder + @"\prod80.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/prod80/prod80-ReShade-Repository/archive/master.zip", randTempRootFolder + @"\prod80.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Depth3D - BlueSkyDefender":
-                            client.DownloadFile(@"https://github.com/BlueSkyDefender/Depth3D/archive/master.zip", randTempRootFolder + @"\depth3d.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/BlueSkyDefender/Depth3D/archive/master.zip", randTempRootFolder + @"\depth3d.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "AstrayFX - BlueSkyDefender":
-                            client.DownloadFile(@"https://github.com/BlueSkyDefender/AstrayFX/archive/master.zip", randTempRootFolder + @"\astrayfx.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/BlueSkyDefender/AstrayFX/archive/master.zip", randTempRootFolder + @"\astrayfx.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "OtisFX - Otis Inf":
-                            client.DownloadFile(@"https://github.com/FransBouma/OtisFX/archive/master.zip", randTempRootFolder + @"\otisfx.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/FransBouma/OtisFX/archive/master.zip", randTempRootFolder + @"\otisfx.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Pirate Shaders - Heathen":
-                            client.DownloadFile(@"https://github.com/Heathen/Pirate-Shaders/archive/master.zip", randTempRootFolder + @"\pirate.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Heathen/Pirate-Shaders/archive/master.zip", randTempRootFolder + @"\pirate.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Shaders - Brussell1":
-                            client.DownloadFile(@"https://github.com/brussell1/Shaders/archive/master.zip", randTempRootFolder + @"\brussell1.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/brussell1/Shaders/archive/master.zip", randTempRootFolder + @"\brussell1.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Shaders - Daodan317081":
-                            client.DownloadFile(@"https://github.com/Daodan317081/reshade-shaders/archive/master.zip", randTempRootFolder + @"\daodan.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Daodan317081/reshade-shaders/archive/master.zip", randTempRootFolder + @"\daodan.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "CorgiFX - originalnicoder":
-                            client.DownloadFile(@"https://github.com/originalnicodr/CorgiFX/archive/master.zip", randTempRootFolder + @"\corgifx.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/originalnicodr/CorgiFX/archive/master.zip", randTempRootFolder + @"\corgifx.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
 
                         case "Fubax - Fubaxiusz":
-                            client.DownloadFile(@"https://github.com/Fubaxiusz/fubax-shaders/archive/master.zip", randTempRootFolder + @"\fubax.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Fubaxiusz/fubax-shaders/archive/master.zip", randTempRootFolder + @"\fubax.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "FXShaders - luluco250":
-                            client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", randTempRootFolder + @"\fxshaders.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/luluco250/FXShaders/archive/master.zip", randTempRootFolder + @"\fxshaders.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             fxshaders = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Shaders - Radegast":
-                            client.DownloadFile(@"https://github.com/Radegast-FFXIV/reshade-shaders/archive/master.zip", randTempRootFolder + @"\radegast.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Radegast-FFXIV/reshade-shaders/archive/master.zip", randTempRootFolder + @"\radegast.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "Insane Shaders - Lord of Lunacy":
-                            client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", randTempRootFolder + @"\insane.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/LordOfLunacy/Insane-Shaders/archive/master.zip", randTempRootFolder + @"\insane.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             lunacy = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
 
                         case "MShaders - TreyM":
-                            client.DownloadFile(@"https://github.com/TreyM/MShaders/archive/main.zip", randTempRootFolder + @"\mshaders.zip");
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/TreyM/MShaders/archive/main.zip", randTempRootFolder + @"\mshaders.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             treym = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
@@ -526,7 +647,7 @@ namespace ReShade_Centralized
             var allFiles = Directory.GetFiles(Program.presets, @"reshade.ini", SearchOption.AllDirectories);
             foreach (var file in allFiles)
             {
-                string workingDLLPath = String.Empty; //needed for the shader cache regeneration
+                string workingDLLPath = Program.dlls; //needed for the shader cache regeneration
 
                 //Separate game name from path
                 string gameName = file;
@@ -543,11 +664,7 @@ namespace ReShade_Centralized
                     {
                         string IntermediateCachePath = line.Substring(22);
                         IntermediateCachePath = IntermediateCachePath.Remove(IntermediateCachePath.Length - 6);
-                        if (IntermediateCachePath == Program.dlls)
-                        {
-                            workingDLLPath = Program.dlls;
-                        }
-                        else
+                        if (IntermediateCachePath == Program.mdlls)
                         {
                             workingDLLPath = Program.mdlls;
                         }
@@ -558,19 +675,14 @@ namespace ReShade_Centralized
                 if (r.EndOfStream == true)
                 {
                     r.Close();
-                    MessageBox.Show(@"Error, something went wrong detecting IntermediateCachePath in reshade.ini for " + gameName + @". File has not been updated.");
+                    Functions.writetoIni(file, @"[GENERAL]", @"IntermediateCachePath=");
+                    //MessageBox.Show(@"Error, something went wrong detecting IntermediateCachePath in reshade.ini for " + gameName + @". File has not been updated.");
                 }
-                else
-                {
-                    r.Close();
-                    Functions.overwriteIni(
-                        file,
-                        new List<string>() { "EffectSearchPaths=", "IntermediateCachePath=", "PresetPath=", "TextureSearchPaths=", "SavePath=" },
-                        new List<string>() { Program.shaders, workingDLLPath + @"\Cache", Program.presets, Program.textures, Program.screenshots }
-                        );
-                    //File.Delete(file);
-                    //Functions.writeReshadeini(file.Remove(file.Length - 12), workingDLLPath, gameName);
-                }
+                else { r.Close(); }
+                Functions.overwriteIni(file,
+                    new List<string>() { "EffectSearchPaths=", "IntermediateCachePath=", "PresetPath=", "TextureSearchPaths=", "SavePath=" },
+                    new List<string>() { Program.shaders, workingDLLPath + @"\Cache", Program.presets, Program.textures, Program.screenshots }
+                    );
             }
         }
 
@@ -586,6 +698,42 @@ namespace ReShade_Centralized
             f.Show();
         }
 
+        private void updateLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.updateLink.LinkVisited = true;
+            System.Diagnostics.Process.Start("https://github.com/OopyDoopy/ReShade-Centralized/releases/latest");
+        }
 
+        private void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
+        {
+            using (var client = new WebClient())
+            {
+                string version = String.Empty;
+                try
+                {
+                    version = client.DownloadString(@"https://github.com/oopydoopy/reshade-centralized/releases/latest"); //download latest release webpage
+                    Regex rg = new Regex(@"reshade-centralized/releases/tag/v\d+.\d+.\d+"); //reliable regex pattern to pull current version number
+                    version = rg.Match(version).ToString(); //perform match and assign to string
+                    version = version.Substring(34); //chop off unnecessary part
+                }
+                catch
+                {
+                    e.Cancel = true;
+                    MessageBox.Show(@"Something went wrong checking for an update.  If https://github.com/oopydoopy/reshade-centralized/releases/latest is still alive and your firewall isn't blocking this application, please report the issue.");
+                }
+
+                if (Properties.Resources.Version == version)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+        private void backgroundWorker4_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!e.Cancelled)
+            {
+                updateLink.Visible = true;
+            }
+        }
     }
 }

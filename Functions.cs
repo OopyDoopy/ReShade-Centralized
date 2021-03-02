@@ -5,6 +5,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Text;
 
 namespace ReShade_Centralized
 {
@@ -125,6 +128,27 @@ namespace ReShade_Centralized
                     }
                     w.WriteLine(file[i]);
                 }
+            }
+        }
+
+        public static void writetoIni(string path, string header, string var) //Adds a new line after header is encountered
+        {
+            StringBuilder sb = new StringBuilder();
+            using (StreamReader r = new StreamReader(path))
+            {
+                string line;
+                do
+                {
+                    line = r.ReadLine();
+                    sb.AppendLine(line);
+                } while (!r.EndOfStream && !line.Contains(header));
+                sb.Append(var);
+                sb.Append(System.Environment.NewLine);
+                sb.Append(r.ReadToEnd());
+            }
+            using (StreamWriter w = new StreamWriter(path))
+            {
+                w.Write(sb.ToString());
             }
         }
 
@@ -288,7 +312,6 @@ namespace ReShade_Centralized
 
         }
 
-        //Thank you Andrew Backer of stackoverflow------
         public enum MachineType
         {
             Native = 0, I386 = 0x014c, Itanium = 0x0200, x64 = 0x8664
@@ -308,7 +331,28 @@ namespace ReShade_Centralized
             int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
             return (MachineType)machineUint;
         }
-        //-----------------------------------------------
 
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+        public enum DeviceCap
+        {
+            VERTRES = 10,
+            DESKTOPVERTRES = 117,
+
+            // http://pinvoke.net/default.aspx/gdi32/GetDeviceCaps.html
+        }
+
+
+        public static float getScalingFactor()
+        {
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            IntPtr desktop = g.GetHdc();
+            int LogicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.VERTRES);
+            int PhysicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.DESKTOPVERTRES);
+
+            float ScreenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
+
+            return ScreenScalingFactor; // 1.25 = 125%
+        }
     }
 }

@@ -14,7 +14,10 @@ namespace ReShade_Centralized
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
-                ControlBox = false
+                ControlBox = false,
+                AutoScaleMode = AutoScaleMode.Font,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                AutoSize = true
             };
             Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
             TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
@@ -37,14 +40,19 @@ namespace ReShade_Centralized
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
-                ControlBox = false
+                ControlBox = false,
+                AutoScaleMode = AutoScaleMode.Font,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                AutoSize = true
             };
             FlowLayoutPanel pnl = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 Visible = true,
                 Name = caption,
-                TabIndex = 0
+                TabIndex = 0,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                AutoSize = true
             };
 
             for (int i = 0; i < options.Length; i++)
@@ -79,28 +87,33 @@ namespace ReShade_Centralized
                 Text = caption,
                 StartPosition = FormStartPosition.CenterParent,
                 ControlBox = false,
-
+                AutoScaleMode = AutoScaleMode.Font,
+                AutoSizeMode = AutoSizeMode.GrowOnly
             };
             FlowLayoutPanel pnl = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 Visible = true,
                 Name = caption,
-                TabIndex = 0
+                TabIndex = 0,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                
             };
 
             CheckedListBox cb = new CheckedListBox();
-            cb.Size = new System.Drawing.Size(wc, hc);
             cb.CheckOnClick = true;
             cb.Items.AddRange(options);
+            cb.IntegralHeight = true;
             for (int i = 0; i < cb.Items.Count; i++)
             {
                 cb.SetItemChecked(i, true);
+                cb.GetItemRectangle(i); //This is required for GetPreferredSize to function.  Very confusing.
             }
+            cb.ClientSize = cb.GetPreferredSize(new System.Drawing.Size());
             pnl.Controls.Add(cb);
 
-
-            Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             pnl.Controls.Add(confirmation);
             prompt.AcceptButton = confirmation;
