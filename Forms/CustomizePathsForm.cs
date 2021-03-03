@@ -2,11 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ReShade_Centralized
 {
     public partial class CustomizePathsForm : Form
     {
+        string oldReshadeShaders;
+        string oldPresets;
+        string oldScreenshots;
+
         public CustomizePathsForm()
         {
             InitializeComponent();
@@ -14,9 +19,15 @@ namespace ReShade_Centralized
 
         private void CustomizePathsForm_Load(object sender, EventArgs e)
         {
-            shadersLabel.Text = Program.shaders.Remove(Program.shaders.Length - 8);
-            presetsLabel.Text = Program.presets;
-            screenshotsLabel.Text = Program.screenshots;
+            //Load current paths into global variables for file relocation
+            oldReshadeShaders = Program.shaders.Remove(Program.shaders.Length - 8);
+            oldPresets = Program.presets;
+            oldScreenshots = Program.screenshots;
+
+            //Load current paths into text boxes
+            shadersTB.Text = Program.shaders.Remove(Program.shaders.Length - 8);
+            presetsTB.Text = Program.presets;
+            screenshotsTB.Text = Program.screenshots;
             this.Select();
         }
 
@@ -28,19 +39,13 @@ namespace ReShade_Centralized
             getDir.Title = "Select the reshade-shaders folder you'd like to use.";
             getDir.InitialDirectory = @"C:\";
             getDir.IsFolderPicker = true;
-            //getDir = Functions.getUserDirectoryCommon(getDir);
             if (getDir.ShowDialog() != CommonFileDialogResult.Ok)
             {
                 this.Focus();
                 return;
             }
             this.Focus();
-            Program.shaders = getDir.FileName + @"\shaders";
-            Program.textures = getDir.FileName + @"\textures";
-            Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "shaders=", "textures=" }, new List<string> { Program.shaders, Program.textures });
-            Functions.readRCIni();
-            DirectoryExtensions.MoveDirectoryOverwrite(curdir, getDir.FileName);
-            shadersLabel.Text = getDir.FileName;
+            shadersTB.Text = getDir.FileName;
         }
 
         private void presetsButton_Click(object sender, EventArgs e)
@@ -57,11 +62,7 @@ namespace ReShade_Centralized
                 return;
             }
             this.Focus();
-            Program.presets = getDir.FileName;
-            Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "presets=" }, new List<string> { Program.presets });
-            Functions.readRCIni();
-            DirectoryExtensions.MoveDirectoryOverwrite(curdir, getDir.FileName);
-            presetsLabel.Text = Program.presets;
+            presetsTB.Text = getDir.FileName;
         }
 
         private void screenshotsButton_Click(object sender, EventArgs e)
@@ -78,11 +79,39 @@ namespace ReShade_Centralized
                 return;
             }
             this.Focus();
-            Program.screenshots = getDir.FileName;
-            Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "screenshots=" }, new List<string> { Program.screenshots });
-            Functions.readRCIni();
-            DirectoryExtensions.MoveDirectoryOverwrite(curdir, getDir.FileName);
-            screenshotsLabel.Text = Program.screenshots;
+            screenshotsTB.Text = getDir.FileName;
+        }
+
+        private void confirmBTN_Click(object sender, EventArgs e)
+        {
+            //Ensure valid paths.  If not valid, try again.
+
+            try
+            {
+                Path.GetFullPath(shadersTB.Text + @"\shaders");
+                Path.GetFullPath(shadersTB.Text + @"\textures");
+                Path.GetFullPath(presetsTB.Text);
+                Path.GetFullPath(screenshotsTB.Text);
+            }
+            catch
+            {
+                MessageBox.Show(@"Invalid path(s) entered.  Please double check your paths and fix any errors.");
+                return;
+            }
+
+            //Update variables in memory and write variables to config file.
+
+            Program.shaders = Path.GetFullPath(shadersTB.Text + @"\shaders");
+            Program.textures = Path.GetFullPath(shadersTB.Text + @"\textures");
+            Program.presets = Path.GetFullPath(presetsTB.Text);
+            Program.screenshots = Path.GetFullPath(screenshotsTB.Text);
+            Functions.overwriteIni("ReShadeCentralized.ini", new List<string> { "shaders=", "textures=", "presets=", "screenshots=" }, new List<string> { Program.shaders, Program.textures, Program.presets, Program.screenshots });
+
+            //Move files from old directory to new directory
+            DirectoryExtensions.MoveDirectoryOverwrite(oldReshadeShaders, Path.GetFullPath(shadersTB.Text));
+            DirectoryExtensions.MoveDirectoryOverwrite(oldPresets, Program.presets);
+            DirectoryExtensions.MoveDirectoryOverwrite(oldScreenshots, Program.screenshots);
+            this.Close();
         }
     }
 }

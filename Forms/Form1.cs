@@ -81,7 +81,7 @@ namespace ReShade_Centralized
 
             string gamedll = System.String.Empty;
 
-            switch ((Prompt.ShowRadioButtons(new string[] { @"DirectX 9", @"DirectX 10+", @"OpenGL", @"Vulkan" }, "Select the Rendering API.", 200, 200)).Text)
+            switch ((Prompt.ShowRadioButtons(new string[] { @"DirectX 9", @"DirectX 10+", @"OpenGL", @"Vulkan" }, "Select the Rendering API.", 0, 0)).Text)
             {
                 case "DirectX 9":
                     gamedll = @"\d3d9.dll";
@@ -102,12 +102,14 @@ namespace ReShade_Centralized
                     break;
             }
 
-
-            string gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
+            GetInput g = new GetInput(@"Please enter Game Name for folder creation.");
+            g.ShowDialog();
+            string gameName = g.gameName;
             while (string.IsNullOrEmpty(gameName))
             {
                 MessageBox.Show("Game Name can't be blank, try again.");
-                gameName = Prompt.ShowDialog(@"Enter Game name. This is used for the creation of the Presets and Screenshots Folders.", "Game Name", 520, 150);
+                g.ShowDialog();
+                gameName = g.gameName;
             }
 
             string workingDLLPath = Program.dlls; //apply working path to variable, mostly for reshade.ini generation

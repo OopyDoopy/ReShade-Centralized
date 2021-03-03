@@ -19,13 +19,29 @@ namespace ReShade_Centralized
                 AutoSizeMode = AutoSizeMode.GrowOnly,
                 AutoSize = true
             };
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
-            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
-            Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            Panel paneltop = new Panel()
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                Dock = DockStyle.Top,
+                Parent = prompt
+            };
+            Panel panelbottom = new Panel()
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowOnly,
+                Dock = DockStyle.Bottom,
+                Parent = prompt
+            };
+            Label textLabel = new Label() { Left = 10, Top = 20, AutoSize = true, Text = text };
+            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = paneltop.Width - 100, AutoSize = true };
+            Button confirmation = new Button() { Left = panelbottom.Width - 100, Top = 10, Text = "OK", AutoSize = true, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
-            prompt.Controls.Add(textBox);
-            prompt.Controls.Add(confirmation);
-            prompt.Controls.Add(textLabel);
+            paneltop.Controls.Add(textBox);
+            panelbottom.Controls.Add(confirmation);
+            paneltop.Controls.Add(textLabel);
+            prompt.Controls.Add(paneltop);
+            prompt.Controls.Add(panelbottom);
             prompt.AcceptButton = confirmation;
 
             return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
@@ -52,17 +68,18 @@ namespace ReShade_Centralized
                 Name = caption,
                 TabIndex = 0,
                 AutoSizeMode = AutoSizeMode.GrowOnly,
-                AutoSize = true
+                AutoSize = true,
+                FlowDirection = FlowDirection.TopDown
             };
 
             for (int i = 0; i < options.Length; i++)
             {
-                if (i == 0) { pnl.Controls.Add(new RadioButton() { Text = options[i], Checked = true }); }
-                else { pnl.Controls.Add(new RadioButton() { Text = options[i] }); }
+                if (i == 0) { pnl.Controls.Add(new RadioButton() { Text = options[i], Checked = true, AutoSize = true }); }
+                else { pnl.Controls.Add(new RadioButton() { Text = options[i], AutoSize = true }); }
             }
 
             Label description = new Label() { Text = label, AutoSize = true };
-            Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            Button confirmation = new Button() { Text = "OK", Anchor = AnchorStyles.Left, Left = 350, Width = 100, Top = 70, AutoSize = true, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             pnl.Controls.Add(description);
             pnl.Controls.Add(confirmation);
@@ -98,7 +115,7 @@ namespace ReShade_Centralized
                 TabIndex = 0,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowOnly,
-                
+                FlowDirection = FlowDirection.TopDown
             };
 
             CheckedListBox cb = new CheckedListBox();
@@ -113,7 +130,7 @@ namespace ReShade_Centralized
             cb.ClientSize = cb.GetPreferredSize(new System.Drawing.Size());
             pnl.Controls.Add(cb);
 
-            Button confirmation = new Button() { Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
+            Button confirmation = new Button() { Anchor = AnchorStyles.Right, Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             pnl.Controls.Add(confirmation);
             prompt.AcceptButton = confirmation;
