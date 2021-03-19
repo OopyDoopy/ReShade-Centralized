@@ -79,7 +79,7 @@ namespace ReShade_Centralized
             }
 
             Label description = new Label() { Text = label, AutoSize = true };
-            Button confirmation = new Button() { Text = "OK", Anchor = AnchorStyles.Left, Left = 350, Width = 100, Top = 70, AutoSize = true, DialogResult = DialogResult.OK };
+            Button confirmation = new Button() { Text = "OK", Anchor = AnchorStyles.Left, Dock = DockStyle.Bottom, Left = 350, Width = 100, Top = 70, AutoSize = true, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             pnl.Controls.Add(description);
             pnl.Controls.Add(confirmation);
@@ -130,7 +130,7 @@ namespace ReShade_Centralized
             cb.ClientSize = cb.GetPreferredSize(new System.Drawing.Size());
             pnl.Controls.Add(cb);
 
-            Button confirmation = new Button() { Anchor = AnchorStyles.Right, Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
+            Button confirmation = new Button() { Anchor = AnchorStyles.Right, Dock = DockStyle.Bottom, Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             pnl.Controls.Add(confirmation);
             prompt.AcceptButton = confirmation;

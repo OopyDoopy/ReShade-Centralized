@@ -7,7 +7,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
+using System.Management.Automation;
 
 namespace ReShade_Centralized
 {
@@ -27,6 +27,11 @@ namespace ReShade_Centralized
                 MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
                 FirstTimeSetup startup = new FirstTimeSetup();
                 startup.ShowDialog();
+                if (startup.DialogResult == DialogResult.Cancel)
+                {
+                    Application.Exit();
+                    return;
+                }
                 Directory.CreateDirectory(startup.Text);
 
                 using (StreamWriter w = new StreamWriter("ReShadeCentralized.ini"))
@@ -63,7 +68,113 @@ namespace ReShade_Centralized
 
         private void installuwp_Click(object sender, EventArgs e)
         {
+            
 
+            bool modded = false;
+            switch ((Prompt.ShowRadioButtons(new string[] { @"Official", "Modded" }, "Select Official or Modified ReShade.", 250, 140, @"Modified ReShade files are self provided.  Place ReShade64.dll and ReShade32.dll in the reshade-files-mod folder to use.")).Text)
+            {
+                case "Official":
+                    modded = false;
+                    break;
+                case "Modded":
+                    modded = true;
+                    break;
+            }
+
+            string workingPath = Program.dlls;
+            if (modded)
+            {
+                workingPath = Program.mdlls;
+            }
+
+            string gameName = Functions.getGameName();
+            string gameExeName = Functions.getGameExeName();
+
+            PowerShell ps = PowerShell.Create();
+            ps.AddCommand(@"Get-AppxPackage");
+            var result = ps.Invoke();
+            List<string> packagefullnames = new List<string>();
+            List<string> packagefamilynames = new List<string>();
+            foreach (var entry in result)
+            {
+                foreach (var subentry in entry.Members)
+                {
+                    if (subentry.Name == "PackageFullName")
+                    {
+                        packagefullnames.Add(subentry.Value.ToString());
+                    }
+                    if (subentry.Name == "PackageFamilyName")
+                    {
+                        packagefamilynames.Add(subentry.Value.ToString());
+                    }
+                }
+            }
+            WindowsStoreAppSelector wsas = new WindowsStoreAppSelector(packagefamilynames);
+            wsas.ShowDialog();
+            int index = 0;
+            for (int i = 0; i < packagefamilynames.Count; i++)
+            {
+                if (packagefamilynames[i] == wsas.selection) {
+                    index = i;
+                    i = packagefamilynames.Count;
+                }
+            }
+            string appid = String.Empty;
+            bool bit64 = false;
+            Regex appidreg = new Regex(@"<Application Id=""[A-Za-z0-9!@#$%^&*.]+""");
+            Regex bit64reg = new Regex(@"ProcessorArchitecture=""x64""");
+            string appxmanifestPath = @"C:\Program Files\WindowsApps\" + packagefullnames[index] + @"\appxmanifest.xml";
+            if (!File.Exists(appxmanifestPath))
+            {
+                MessageBox.Show(@"appxmanifest.xml does not exist.  This most likely means you didn't select a valid application from the list.  Start over and try again.");
+                return;
+            }
+            using (StreamReader r = new StreamReader(appxmanifestPath))
+            {
+                while (!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    if (appidreg.Match(line).Success)
+                    {
+                        appid = appidreg.Match(line).Value;
+                        appid = appid.Substring(17, appid.Length - 18); //chop off beginning and end of match
+                    }
+                    if (bit64reg.Match(line).Success)
+                    {
+                        bit64 = true;
+                    }
+                }
+            }
+            if (appid == String.Empty)
+            {
+                MessageBox.Show(@"Error: Failed to find Application Id in the game's appxmanifest.xml.");
+                return;
+            }
+            Directory.CreateDirectory(Program.screenshots + @"\" + gameName);
+            Directory.CreateDirectory(Program.presets + @"\" + gameName);
+
+            Functions.deployReshadeConfigs(gameName, workingPath, Program.presets + @"\" + gameName);
+            Functions.deployReshadeFilesInjector(workingPath, Program.presets + @"\" + gameName, bit64);
+            string ps1dir = Environment.SpecialFolder.CommonDesktopDirectory + @"\" + gameName + @" with ReShade.ps1";
+            DialogResult overwrite = DialogResult.Yes;
+            if (File.Exists(ps1dir))
+            {
+                overwrite = MessageBox.Show(ps1dir + " already exists.  Would you like to overwrite?", "Warning", MessageBoxButtons.YesNo);
+                if (overwrite == DialogResult.Yes)
+                {
+                    File.Delete(ps1dir);
+                }
+            }
+            if (overwrite == DialogResult.Yes)
+            {
+                using (StreamWriter w = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + gameName + @" with ReShade.ps1"))
+                {
+                    w.WriteLine(@"cd '" + Program.presets + @"\" + gameName + @"'");
+                    w.WriteLine(@"Start-Process -FilePath inject.exe " + gameExeName);
+                    w.WriteLine(@"Start-Process -FilePath explorer.exe shell:appsFolder\" + packagefamilynames[index] + @"!" + appid);
+                }
+            }
+            MessageBox.Show(@"Reshade installed!  Check your desktop for a PowerShell script to launch the game with.");
         }
 
         private void installwin32_Click(object sender, EventArgs e)
@@ -102,15 +213,7 @@ namespace ReShade_Centralized
                     break;
             }
 
-            GetInput g = new GetInput(@"Please enter Game Name for folder creation.");
-            g.ShowDialog();
-            string gameName = g.gameName;
-            while (string.IsNullOrEmpty(gameName))
-            {
-                MessageBox.Show("Game Name can't be blank, try again.");
-                g.ShowDialog();
-                gameName = g.gameName;
-            }
+            string gameName = Functions.getGameName();
 
             string workingDLLPath = Program.dlls; //apply working path to variable, mostly for reshade.ini generation
 
@@ -149,41 +252,8 @@ namespace ReShade_Centralized
             Directory.CreateDirectory(Program.screenshots + @"\" + gameName);
             Directory.CreateDirectory(Program.presets + @"\" + gameName);
 
-            DialogResult overwrite;
-            if (File.Exists(Program.presets + @"\" + gameName + @"\reshade.ini") || File.Exists(Program.presets + @"\" + gameName + @"\ReShade.ini"))
-            {
-                overwrite = MessageBox.Show("ReShade.ini Detected.  Would you like to overwrite?", "Warning", MessageBoxButtons.YesNo);
-            }
-            else
-            {
-                overwrite = DialogResult.Yes;
-            }
-            if (overwrite == DialogResult.Yes)
-            {
-                if (File.Exists(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini"))
-                {
-                    File.Delete(Path.GetDirectoryName(gameDialog.FileName) + @"\reshade.ini");
-                }
-                Functions.writeReshadeini(Program.presets + @"\" + gameName, workingDLLPath, gameName, Path.GetDirectoryName(gameDialog.FileName));
-            }
-
-
-            if (!File.Exists(Program.presets + @"\" + gameName + @"\ReshadePreset.ini"))
-            {
-                string nl = "\n"; //makes typing up that multiline write a bit easier
-                File.WriteAllText(Program.presets + @"\" + gameName + @"\ReshadePreset.ini",
-                    @"PreprocessorDefinitions=" + nl +
-                    @"Techniques=" + nl +
-                    @"TechniqueSorting=DisplayDepth"
-                );
-            }
-            else
-            {
-                MessageBox.Show("ReshadePreset.ini detected.  File has not been overwritten.");
-            }
-
+            Functions.deployReshadeConfigs(gameName, workingDLLPath, Path.GetDirectoryName(gameDialog.FileName));
             MessageBox.Show("ReShade Successfully Installed!");
-
         }
 
         private void custsetup_Click(object sender, EventArgs e)
@@ -213,12 +283,32 @@ namespace ReShade_Centralized
 
             using (var client = new WebClient())
             {
+                //Download Reshade
                 worker.ReportProgress(0);
-                string download = client.DownloadString("https://reshade.me");
+                string download = String.Empty;
+                try
+                {
+                    download = client.DownloadString("https://reshade.me");
+                }
+                catch
+                {
+                    MessageBox.Show(@"Reshade website is down or the connection was blocked");
+                    worker.ReportProgress(0);
+                    return;
+                }
                 Regex rg = new Regex(@"/downloads/\S*.exe");
                 download = "https://reshade.me" + rg.Match(download).ToString();
-                client.DownloadFile(download, "reshade.exe");
-                worker.ReportProgress(20);
+                try
+                {
+                    client.DownloadFile(download, "reshade.exe");
+                }
+                catch
+                {
+                    MessageBox.Show(@"Download link most likely no longer matches the pattern.  Please report the issue on the ReShade Centralized Github page.");
+                    worker.ReportProgress(0);
+                    return;
+                }
+                worker.ReportProgress(15);
 
                 using (ArchiveFile archiveFile = new ArchiveFile(@"ReShade.exe"))
                 {
@@ -228,11 +318,11 @@ namespace ReShade_Centralized
                         if (entry.FileName == "[0]")
                         {
                             entry.Extract(entry.FileName);
-                            worker.ReportProgress(40);
+                            worker.ReportProgress(30);
 
                             using (ArchiveFile archiveFile2 = new ArchiveFile(@"[0]"))
                             {
-                                int prog = 40;
+                                int prog = 30;
                                 foreach (Entry entry2 in archiveFile2.Entries)
                                 {
                                     if (entry2.FileName == "ReShade32.dll" || entry2.FileName == "ReShade64.dll")
@@ -251,6 +341,19 @@ namespace ReShade_Centralized
 
                     }
                 }
+                //Download Process Injector
+                try
+                {
+                    client.DownloadFile(@"https://reshade.me/downloads/inject32.exe", Program.dlls + @"\inject32.exe");
+                    client.DownloadFile(@"https://reshade.me/downloads/inject64.exe", Program.dlls + @"\inject64.exe");
+                }
+                catch
+                {
+                    MessageBox.Show(@"The link for the Injector is invalid.  Please report this problem on the ReShade Centralized github page.");
+                    return;
+                }
+                File.Copy(Program.dlls + @"\inject32.exe", Program.mdlls + @"\inject32.exe");
+                File.Copy(Program.dlls + @"\inject64.exe", Program.mdlls + @"\inject64.exe");
             }
             File.Delete(@"reshade.exe");
             File.Delete(@"[0]");

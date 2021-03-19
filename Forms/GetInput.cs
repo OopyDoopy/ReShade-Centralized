@@ -17,11 +17,12 @@ namespace ReShade_Centralized
         {
             InitializeComponent();
             this.label1.Text = label;
+            this.game.Width = this.label1.Width;
         }
 
         private void confirmation_Click(object sender, EventArgs e)
         {
-            gameName = label1.Text;
+            gameName = game.Text;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

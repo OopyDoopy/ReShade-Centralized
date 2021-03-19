@@ -17,7 +17,7 @@ namespace ReShade_Centralized
         public static string screenshots = System.String.Empty;
         public static string dlls = System.String.Empty;
         public static string mdlls = System.String.Empty;
-        public static List<iniEntry> games = new List<iniEntry>();
+        //public static List<iniEntry> games = new List<iniEntry>();
 
         public struct iniEntry //This struct is unneeded but is setup this way in case functionality is added where knowing the line number is beneficial.
         {

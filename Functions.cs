@@ -171,6 +171,32 @@ namespace ReShade_Centralized
 
         }
 
+        public static string getGameName()
+        {
+            GetInput g = new GetInput(@"Please enter Game Name for folder creation.");
+            g.Text = @"Enter Game Name";
+            g.ShowDialog();
+            while (string.IsNullOrEmpty(g.gameName))
+            {
+                MessageBox.Show("Game Name can't be blank, try again.");
+                g.ShowDialog();
+            }
+            return g.gameName;
+        }
+
+        public static string getGameExeName()
+        {
+            GetInput g = new GetInput(@"Launch the UWP game and open the task manager.  Locate the .exe from the Details tab.  Type the name here (example: Game.exe)");
+            g.Text = @"Enter Game.exe";
+            g.ShowDialog();
+            while (string.IsNullOrEmpty(g.gameName))
+            {
+                MessageBox.Show("Entry can't be blank, try again.");
+                g.ShowDialog();
+            }
+            return g.gameName;
+        }
+
         //public static OpenFileDialog getUserDirectory(OpenFileDialog dir)
         //{
         //    bool exitLoop = false;
@@ -188,6 +214,55 @@ namespace ReShade_Centralized
         //    }
         //    return dir;
         //}
+
+        public static void deployReshadeConfigs(string gameName, string workingDLLPath, string installPath)
+        {
+            DialogResult overwrite;
+            if (File.Exists(Program.presets + @"\" + gameName + @"\reshade.ini") || File.Exists(Program.presets + @"\" + gameName + @"\ReShade.ini"))
+            {
+                overwrite = MessageBox.Show("ReShade.ini Detected.  Would you like to overwrite?", "Warning", MessageBoxButtons.YesNo);
+            }
+            else
+            {
+                overwrite = DialogResult.Yes;
+            }
+            if (overwrite == DialogResult.Yes)
+            {
+                if (File.Exists(installPath + @"\reshade.ini"))
+                {
+                    File.Delete(installPath + @"\reshade.ini");
+                }
+                Functions.writeReshadeini(Program.presets + @"\" + gameName, workingDLLPath, gameName, installPath);
+            }
+
+
+            if (!File.Exists(Program.presets + @"\" + gameName + @"\ReshadePreset.ini"))
+            {
+                string nl = "\n"; //makes typing up that multiline write a bit easier
+                File.WriteAllText(Program.presets + @"\" + gameName + @"\ReshadePreset.ini",
+                    @"PreprocessorDefinitions=" + nl +
+                    @"Techniques=" + nl +
+                    @"TechniqueSorting=DisplayDepth"
+                );
+            }
+            else
+            {
+                MessageBox.Show("ReshadePreset.ini detected.  File has not been overwritten.");
+            }
+        }
+
+        public static void deployReshadeFilesInjector(string source, string dest, bool bit64) //
+        {
+            string inject = @"\inject32.exe";
+            string reshade = @"\ReShade32.dll";
+            if (bit64)
+            {
+                inject = @"\inject64.exe";
+                reshade = @"\ReShade64.dll";
+            }
+            SymbolicLink.CreateSymbolicLink(dest + @"\inject.exe", source + inject, 0);
+            SymbolicLink.CreateSymbolicLink(dest + reshade, source + reshade, 0);
+        }
 
         public static void writeReshadeini(string dest, string workingDLLPath, string gameName, string gameDir)
         {

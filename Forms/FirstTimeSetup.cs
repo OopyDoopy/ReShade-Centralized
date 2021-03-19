@@ -40,7 +40,6 @@ namespace ReShade_Centralized
             try
             {
                 this.Text = Path.GetFullPath(textDir.Text);
-                this.Text = textDir.Text;
                 this.DialogResult = DialogResult.OK;
                 ContinueClicked = true;
                 this.Close();
@@ -55,7 +54,7 @@ namespace ReShade_Centralized
         {
             if (ContinueClicked == false)
             {
-                Application.Exit();
+                this.DialogResult = DialogResult.Cancel;
             }
         }
     }
