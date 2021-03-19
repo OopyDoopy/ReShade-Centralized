@@ -56,7 +56,7 @@ namespace ReShade_Centralized
             this.installuwp.Name = "installuwp";
             this.installuwp.Size = new System.Drawing.Size(284, 75);
             this.installuwp.TabIndex = 2;
-            this.installuwp.Text = "Install to UWP (Coming Soon)";
+            this.installuwp.Text = "Install to Microsoft Store";
             this.installuwp.UseVisualStyleBackColor = true;
             this.installuwp.Click += new System.EventHandler(this.installuwp_Click);
             // 

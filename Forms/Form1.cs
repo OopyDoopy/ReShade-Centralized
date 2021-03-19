@@ -103,7 +103,7 @@ namespace ReShade_Centralized
                     {
                         packagefullnames.Add(subentry.Value.ToString());
                     }
-                    if (subentry.Name == "PackageFamilyName")
+                    else if (subentry.Name == "PackageFamilyName")
                     {
                         packagefamilynames.Add(subentry.Value.ToString());
                     }
@@ -155,7 +155,7 @@ namespace ReShade_Centralized
 
             Functions.deployReshadeConfigs(gameName, workingPath, Program.presets + @"\" + gameName);
             Functions.deployReshadeFilesInjector(workingPath, Program.presets + @"\" + gameName, bit64);
-            string ps1dir = Environment.SpecialFolder.CommonDesktopDirectory + @"\" + gameName + @" with ReShade.ps1";
+            string ps1dir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + gameName + @" with ReShade.ps1";
             DialogResult overwrite = DialogResult.Yes;
             if (File.Exists(ps1dir))
             {
