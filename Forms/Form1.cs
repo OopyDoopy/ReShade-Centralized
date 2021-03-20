@@ -391,6 +391,7 @@ namespace ReShade_Centralized
                 bool legacy = false;
                 bool fxshaders = false;
                 bool lunacy = false;
+                bool radegast = false;
                 bool treym = false;
                 var rand = new Random();
                 string randTempRootFolder = @".\temp" + rand.Next().ToString();
@@ -600,6 +601,7 @@ namespace ReShade_Centralized
                             {
                                 MessageBox.Show(dlFail + items[i]);
                             }
+                            radegast = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
@@ -679,6 +681,12 @@ namespace ReShade_Centralized
                 {
                     Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\DevShaders", true);
                     Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\OldShaders", true);
+                }
+
+                if (radegast == true)
+                {
+                    Directory.CreateDirectory(Program.shaders + @"\" + "Include");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\reshade-shaders-master\Shaders\Include", Program.shaders + @"\Include");
                 }
 
                 //End special cases------------

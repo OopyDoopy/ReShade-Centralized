@@ -336,7 +336,11 @@ namespace ReShade_Centralized
             {
                 File.Delete(dest);
             }
-
+            string workingDir = Path.GetDirectoryName(dest);
+            if (!Directory.Exists(workingDir))
+            {
+                Directory.CreateDirectory(workingDir);
+            }
             File.Move(source, dest);
         }
 
