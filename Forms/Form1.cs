@@ -352,8 +352,8 @@ namespace ReShade_Centralized
                     MessageBox.Show(@"The link for the Injector is invalid.  Please report this problem on the ReShade Centralized github page.");
                     return;
                 }
-                File.Copy(Program.dlls + @"\inject32.exe", Program.mdlls + @"\inject32.exe");
-                File.Copy(Program.dlls + @"\inject64.exe", Program.mdlls + @"\inject64.exe");
+                File.Copy(Program.dlls + @"\inject32.exe", Program.mdlls + @"\inject32.exe", true);
+                File.Copy(Program.dlls + @"\inject64.exe", Program.mdlls + @"\inject64.exe", true);
             }
             File.Delete(@"reshade.exe");
             File.Delete(@"[0]");
