@@ -794,7 +794,7 @@ namespace ReShade_Centralized
                 else { r.Close(); }
                 Functions.overwriteIni(file,
                     new List<string>() { "EffectSearchPaths=", "IntermediateCachePath=", "PresetPath=", "TextureSearchPaths=", "SavePath=" },
-                    new List<string>() { Program.shaders, workingDLLPath + @"\Cache", Program.presets, Program.textures, Program.screenshots }
+                    new List<string>() { Program.shaders, workingDLLPath + @"\Cache", Program.presets + @"\" + gameName + @"\ReShadePreset.ini", Program.textures, Program.screenshots + @"\" + gameName }
                     );
             }
         }
