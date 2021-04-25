@@ -385,7 +385,7 @@ namespace ReShade_Centralized
 
             worker.ReportProgress(0);
 
-            var items = Prompt.ShowCheckBoxes(new string[] { "qUINT - Marty McFly", "Standard - Crosire", "Legacy - Crosire", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MShaders - TreyM" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
+            var items = Prompt.ShowCheckBoxes(new string[] { "qUINT - Marty McFly", "Standard - Crosire", "Legacy - Crosire", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MShaders - TreyM", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
             using (var client = new WebClient())
             {
                 bool legacy = false;
@@ -393,6 +393,8 @@ namespace ReShade_Centralized
                 bool lunacy = false;
                 bool radegast = false;
                 bool treym = false;
+                bool matsilagi = false;
+                bool lordkobra = false;
                 var rand = new Random();
                 string randTempRootFolder = @".\temp" + rand.Next().ToString();
                 while (Directory.Exists(randTempRootFolder))
@@ -633,6 +635,60 @@ namespace ReShade_Centralized
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
+
+                        case "MLUT - TheGordinho":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/TheGordinho/MLUT/archive/refs/heads/master.zip", randTempRootFolder + @"\mlut.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "RSRetroArch - Matsilagi":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Matsilagi/RSRetroArch/archive/refs/heads/main.zip", randTempRootFolder + @"\RSRetroArch.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            matsilagi = true;
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "Shaders - MadCake":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/ConstantineRudenko/Shaders/archive/refs/heads/master.zip", randTempRootFolder + @"\MadCake.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "CobraFX - LordKobra":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/LordKobra/CobraFX/archive/refs/heads/master.zip", randTempRootFolder + @"\CobraFX.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            lordkobra = true;
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
                     }
                 }
                 client.Dispose();
@@ -687,6 +743,24 @@ namespace ReShade_Centralized
                 {
                     Directory.CreateDirectory(Program.shaders + @"\" + "Include");
                     DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\reshade-shaders-master\Shaders\Include", Program.shaders + @"\Include");
+                }
+
+                if (matsilagi == true)
+                {
+                    Directory.CreateDirectory(Program.textures + @"\crt-cx");
+                    Directory.CreateDirectory(Program.textures + @"\crt-newpixie");
+                    Directory.CreateDirectory(Program.textures + @"\crt_potato");
+                    Directory.CreateDirectory(Program.textures + @"\crtsim");
+
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\RSRetroArch-main\Textures\crt-cx", Program.textures + @"\crt-cx");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\RSRetroArch-main\Textures\crt-newpixie", Program.textures + @"\crt-newpixie");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\RSRetroArch-main\Textures\crt_potato", Program.textures + @"\crt_potato");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\RSRetroArch-main\Textures\crtsim", Program.textures + @"\crtsim");
+                }
+
+                if (lordkobra == true)
+                {
+                    Directory.Delete(randTempRootFolder + @"\CobraFX-master\Shaders\outdated", true);
                 }
 
                 //End special cases------------
