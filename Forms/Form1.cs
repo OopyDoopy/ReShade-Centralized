@@ -633,6 +633,63 @@ namespace ReShade_Centralized
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
+                            
+                            
+                         case "MLUT - TheGordinho":
+                                try
+                                {
+                                    client.DownloadFile(@"https://github.com/TheGordinho/MLUT/archive/refs/heads/master.zip", randTempRootFolder + @"\mlut.zip");
+                                }
+                                catch
+                                {
+                                    MessageBox.Show(dlFail + items[i]);
+                                }
+                                treym = true;
+                                pbarValue += pbarInc;
+                                worker.ReportProgress(pbarValue);
+                                break;
+                                
+                           case "RSRetroArch - Matsilagi":
+                                      try
+                                      {
+                                          client.DownloadFile(@"https://github.com/Matsilagi/RSRetroArch/archive/refs/heads/main.zip", randTempRootFolder + @"\RSRetroArch.zip");
+                                      }
+                                      catch
+                                      {
+                                          MessageBox.Show(dlFail + items[i]);
+                                      }
+                                      treym = true;
+                                      pbarValue += pbarInc;
+                                      worker.ReportProgress(pbarValue);
+                                      break;
+
+                            case "Shaders - MadCake":
+                                          try
+                                          {
+                                              client.DownloadFile(@"https://github.com/ConstantineRudenko/Shaders/archive/refs/heads/master.zip", randTempRootFolder + @"\MadCake.zip");
+                                          }
+                                          catch
+                                          {
+                                              MessageBox.Show(dlFail + items[i]);
+                                          }
+                                          treym = true;
+                                          pbarValue += pbarInc;
+                                          worker.ReportProgress(pbarValue);
+                                          break;
+
+                             case "CobraFX - LordKobra":
+                                            try
+                                            {
+                                                client.DownloadFile(@"https://github.com/LordKobra/CobraFX/archive/refs/heads/master.zip", randTempRootFolder + @"\CobraFX.zip");
+                                            }
+                                            catch
+                                            {
+                                                MessageBox.Show(dlFail + items[i]);
+                                            }
+                                            treym = true;
+                                            pbarValue += pbarInc;
+                                            worker.ReportProgress(pbarValue);
+                                            break;
                     }
                 }
                 client.Dispose();
