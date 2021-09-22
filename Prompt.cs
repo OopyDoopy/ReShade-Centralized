@@ -117,27 +117,57 @@ namespace ReShade_Centralized
                 AutoSizeMode = AutoSizeMode.GrowOnly,
                 FlowDirection = FlowDirection.TopDown
             };
-
             CheckedListBox cb = new CheckedListBox();
+            cb.ItemCheck += Cb_ItemCheck;
             cb.CheckOnClick = true;
             cb.Items.AddRange(options);
             cb.IntegralHeight = true;
-            for (int i = 0; i < cb.Items.Count; i++)
+            cb.SetItemCheckState(0, CheckState.Checked);
+            for (int i = 1; i < cb.Items.Count; i++)
             {
-                cb.SetItemChecked(i, true);
+                cb.SetItemChecked(i, false);
                 cb.GetItemRectangle(i); //This is required for GetPreferredSize to function.  Very confusing.
             }
+
+
+            Button toggleAllSelection = new Button() { Anchor = AnchorStyles.Right, Dock = DockStyle.Top, Text = "Select/Deselect All", Left = 350, Width = 100, Top = 70, AutoSize = true };
+            toggleAllSelection.Click += (sender, e) =>
+                {
+                    bool isChecked = false;
+                    for (int i = 1; i < cb.Items.Count && isChecked == false; i++)
+                    {
+                        isChecked = cb.GetItemChecked(i);
+                    }
+
+                    for (int i = 1; i < cb.Items.Count; i++)
+                    {
+                        cb.SetItemChecked(i, !isChecked);
+                    }
+                };
+            pnl.Controls.Add(toggleAllSelection);
+
             cb.ClientSize = cb.GetPreferredSize(new System.Drawing.Size());
             pnl.Controls.Add(cb);
 
             Button confirmation = new Button() { Anchor = AnchorStyles.Right, Dock = DockStyle.Bottom, Text = "OK", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK, AutoSize = true };
+
             confirmation.Click += (sender, e) => { prompt.Close(); };
+
             pnl.Controls.Add(confirmation);
+
             prompt.AcceptButton = confirmation;
             prompt.Controls.Add(pnl);
             prompt.ShowDialog();
 
             return cb;
+        }
+
+        private static void Cb_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if ( e.Index == 0)
+            {
+                e.NewValue = CheckState.Checked;
+            }
         }
     }
 }

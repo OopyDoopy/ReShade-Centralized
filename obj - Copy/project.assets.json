@@ -1,0 +1,591 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7.2": {
+      "Microsoft.PowerShell.5.ReferenceAssemblies/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net4/System.Management.Automation.dll": {}
+        },
+        "runtime": {
+          "lib/net4/System.Management.Automation.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Core/1.1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Shell/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.WindowsAPICodePack-Core": "1.1.0"
+        },
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        }
+      },
+      "SevenZipExtractor/1.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "runtime": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "build": {
+          "build/SevenZipExtractor.targets": {}
+        }
+      },
+      "System.IO.Compression/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netstandard1.3/System.IO.Compression.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/net46/System.IO.Compression.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "System.IO.Compression.ZipFile/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.IO.Compression.FileSystem",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.ZipFile.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.ZipFile.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win": {
+      "Microsoft.PowerShell.5.ReferenceAssemblies/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net4/System.Management.Automation.dll": {}
+        },
+        "runtime": {
+          "lib/net4/System.Management.Automation.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Core/1.1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Shell/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.WindowsAPICodePack-Core": "1.1.0"
+        },
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        }
+      },
+      "SevenZipExtractor/1.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "runtime": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "build": {
+          "build/SevenZipExtractor.targets": {}
+        }
+      },
+      "System.IO.Compression/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.dll": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/net46/System.IO.Compression.dll": {}
+        }
+      },
+      "System.IO.Compression.ZipFile/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.IO.Compression.FileSystem",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.ZipFile.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.ZipFile.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x64": {
+      "Microsoft.PowerShell.5.ReferenceAssemblies/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net4/System.Management.Automation.dll": {}
+        },
+        "runtime": {
+          "lib/net4/System.Management.Automation.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Core/1.1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Shell/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.WindowsAPICodePack-Core": "1.1.0"
+        },
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        }
+      },
+      "SevenZipExtractor/1.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "runtime": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "build": {
+          "build/SevenZipExtractor.targets": {}
+        }
+      },
+      "System.IO.Compression/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.dll": {}
+        }
+      },
+      "System.IO.Compression.ZipFile/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.IO.Compression.FileSystem",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.ZipFile.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.ZipFile.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x86": {
+      "Microsoft.PowerShell.5.ReferenceAssemblies/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net4/System.Management.Automation.dll": {}
+        },
+        "runtime": {
+          "lib/net4/System.Management.Automation.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Core/1.1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.dll": {}
+        }
+      },
+      "Microsoft.WindowsAPICodePack-Shell/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.WindowsAPICodePack-Core": "1.1.0"
+        },
+        "compile": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {}
+        }
+      },
+      "SevenZipExtractor/1.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "runtime": {
+          "lib/net45/SevenZipExtractor.dll": {}
+        },
+        "build": {
+          "build/SevenZipExtractor.targets": {}
+        }
+      },
+      "System.IO.Compression/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.dll": {}
+        }
+      },
+      "System.IO.Compression.ZipFile/4.3.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.IO.Compression.FileSystem",
+          "mscorlib"
+        ],
+        "compile": {
+          "ref/net46/System.IO.Compression.ZipFile.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.IO.Compression.ZipFile.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.PowerShell.5.ReferenceAssemblies/1.1.0": {
+      "sha512": "EE87t3aUXlO0Rjq83Ti8z1g4wwsWnB4W+pOn84i3QWzUOOuP5gZg8n4Y8XTZ7GkxGcoSR6w/d/kBJTJbc3VZPQ==",
+      "type": "package",
+      "path": "microsoft.powershell.5.referenceassemblies/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net4/Microsoft.Management.Infrastructure.dll",
+        "lib/net4/Microsoft.PowerShell.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.Commands.Diagnostics.dll",
+        "lib/net4/Microsoft.PowerShell.ConsoleHost.dll",
+        "lib/net4/Microsoft.PowerShell.ConsoleHost.xml",
+        "lib/net4/Microsoft.PowerShell.Core.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Core.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.Diagnostics.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Diagnostics.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.Editor.dll",
+        "lib/net4/Microsoft.PowerShell.GPowerShell.dll",
+        "lib/net4/Microsoft.PowerShell.GPowerShell.xml",
+        "lib/net4/Microsoft.PowerShell.GraphicalHost.dll",
+        "lib/net4/Microsoft.PowerShell.GraphicalHost.xml",
+        "lib/net4/Microsoft.PowerShell.ISECommon.dll",
+        "lib/net4/Microsoft.PowerShell.ISECommon.xml",
+        "lib/net4/Microsoft.PowerShell.Management.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Management.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.PSReadLine.dll",
+        "lib/net4/Microsoft.PowerShell.PackageManagement.dll",
+        "lib/net4/Microsoft.PowerShell.Security.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Security.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.Security.dll",
+        "lib/net4/Microsoft.PowerShell.Security.xml",
+        "lib/net4/Microsoft.PowerShell.Utility.Activities.dll",
+        "lib/net4/Microsoft.PowerShell.Utility.Activities.xml",
+        "lib/net4/Microsoft.PowerShell.Workflow.ServiceCore.xml",
+        "lib/net4/Microsoft.Powershell.Workflow.ServiceCore.dll",
+        "lib/net4/System.Management.Automation.dll",
+        "lib/net4/System.Management.Automation.xml",
+        "microsoft.powershell.5.referenceassemblies.1.1.0.nupkg.sha512",
+        "microsoft.powershell.5.referenceassemblies.nuspec"
+      ]
+    },
+    "Microsoft.WindowsAPICodePack-Core/1.1.0.2": {
+      "sha512": "rfcfF2KwFVLt/zAaJfkqFPk/WPRAgFIamvGw+SSC0lYWNKMT+hTtIcNNifc/ZFDmoozYtldDgrHsj4qbsLQZtQ==",
+      "type": "package",
+      "path": "microsoft.windowsapicodepack-core/1.1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/Microsoft.WindowsAPICodePack.XML",
+        "lib/Microsoft.WindowsAPICodePack.dll",
+        "lib/Microsoft.WindowsAPICodePack.pdb",
+        "microsoft.windowsapicodepack-core.1.1.0.2.nupkg.sha512",
+        "microsoft.windowsapicodepack-core.nuspec"
+      ]
+    },
+    "Microsoft.WindowsAPICodePack-Shell/1.1.0": {
+      "sha512": "8WvLG0TNTylzMB8gnZeZDG68/DsagAF64K35RC2Y/zocHp4e03Uj/kba6egQlq1+0uVv04FpLG+CmENEIN53rg==",
+      "type": "package",
+      "path": "microsoft.windowsapicodepack-shell/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/Microsoft.WindowsAPICodePack.Shell.pdb",
+        "lib/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/Microsoft.WindowsAPICodePack.ShellExtensions.XML",
+        "lib/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
+        "lib/Microsoft.WindowsAPICodePack.ShellExtensions.pdb",
+        "microsoft.windowsapicodepack-shell.1.1.0.nupkg.sha512",
+        "microsoft.windowsapicodepack-shell.nuspec"
+      ]
+    },
+    "SevenZipExtractor/1.0.15": {
+      "sha512": "UdFBcqteOQNWqtfpChv16OJ+SCVWw4kdDAtFBeHxOYAxlvIGv6ZM7iWv/WOUyvbaU+dj9LtWpuXaVRD6x31few==",
+      "type": "package",
+      "path": "sevenzipextractor/1.0.15",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/SevenZipExtractor.targets",
+        "build/x64/7z.dll",
+        "build/x86/7z.dll",
+        "lib/net45/SevenZipExtractor.dll",
+        "lib/netstandard2.0/SevenZipExtractor.dll",
+        "sevenzipextractor.1.0.15.nupkg.sha512",
+        "sevenzipextractor.nuspec"
+      ]
+    },
+    "System.IO.Compression/4.3.0": {
+      "sha512": "YHndyoiV90iu4iKG115ibkhrG+S3jBm8Ap9OwoUAzO5oPDAWcr0SFwQFm0HjM8WkEZWo0zvLTyLmbvTkW1bXgg==",
+      "type": "package",
+      "path": "system.io.compression/4.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/net46/System.IO.Compression.dll",
+        "lib/portable-net45+win8+wpa81/_._",
+        "lib/win8/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net45/_._",
+        "ref/net46/System.IO.Compression.dll",
+        "ref/netcore50/System.IO.Compression.dll",
+        "ref/netcore50/System.IO.Compression.xml",
+        "ref/netcore50/de/System.IO.Compression.xml",
+        "ref/netcore50/es/System.IO.Compression.xml",
+        "ref/netcore50/fr/System.IO.Compression.xml",
+        "ref/netcore50/it/System.IO.Compression.xml",
+        "ref/netcore50/ja/System.IO.Compression.xml",
+        "ref/netcore50/ko/System.IO.Compression.xml",
+        "ref/netcore50/ru/System.IO.Compression.xml",
+        "ref/netcore50/zh-hans/System.IO.Compression.xml",
+        "ref/netcore50/zh-hant/System.IO.Compression.xml",
+        "ref/netstandard1.1/System.IO.Compression.dll",
+        "ref/netstandard1.1/System.IO.Compression.xml",
+        "ref/netstandard1.1/de/System.IO.Compression.xml",
+        "ref/netstandard1.1/es/System.IO.Compression.xml",
+        "ref/netstandard1.1/fr/System.IO.Compression.xml",
+        "ref/netstandard1.1/it/System.IO.Compression.xml",
+        "ref/netstandard1.1/ja/System.IO.Compression.xml",
+        "ref/netstandard1.1/ko/System.IO.Compression.xml",
+        "ref/netstandard1.1/ru/System.IO.Compression.xml",
+        "ref/netstandard1.1/zh-hans/System.IO.Compression.xml",
+        "ref/netstandard1.1/zh-hant/System.IO.Compression.xml",
+        "ref/netstandard1.3/System.IO.Compression.dll",
+        "ref/netstandard1.3/System.IO.Compression.xml",
+        "ref/netstandard1.3/de/System.IO.Compression.xml",
+        "ref/netstandard1.3/es/System.IO.Compression.xml",
+        "ref/netstandard1.3/fr/System.IO.Compression.xml",
+        "ref/netstandard1.3/it/System.IO.Compression.xml",
+        "ref/netstandard1.3/ja/System.IO.Compression.xml",
+        "ref/netstandard1.3/ko/System.IO.Compression.xml",
+        "ref/netstandard1.3/ru/System.IO.Compression.xml",
+        "ref/netstandard1.3/zh-hans/System.IO.Compression.xml",
+        "ref/netstandard1.3/zh-hant/System.IO.Compression.xml",
+        "ref/portable-net45+win8+wpa81/_._",
+        "ref/win8/_._",
+        "ref/wpa81/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netstandard1.3/System.IO.Compression.dll",
+        "runtimes/win/lib/net46/System.IO.Compression.dll",
+        "runtimes/win/lib/netstandard1.3/System.IO.Compression.dll",
+        "system.io.compression.4.3.0.nupkg.sha512",
+        "system.io.compression.nuspec"
+      ]
+    },
+    "System.IO.Compression.ZipFile/4.3.0": {
+      "sha512": "G4HwjEsgIwy3JFBduZ9quBkAu+eUwjIdJleuNSgmUojbH6O3mlvEIme+GHx/cLlTAPcrnnL7GqvB9pTlWRfhOg==",
+      "type": "package",
+      "path": "system.io.compression.zipfile/4.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.IO.Compression.ZipFile.dll",
+        "lib/netstandard1.3/System.IO.Compression.ZipFile.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net46/System.IO.Compression.ZipFile.dll",
+        "ref/netstandard1.3/System.IO.Compression.ZipFile.dll",
+        "ref/netstandard1.3/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/de/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/es/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/fr/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/it/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/ja/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/ko/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/ru/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/zh-hans/System.IO.Compression.ZipFile.xml",
+        "ref/netstandard1.3/zh-hant/System.IO.Compression.ZipFile.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "system.io.compression.zipfile.4.3.0.nupkg.sha512",
+        "system.io.compression.zipfile.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7.2": [
+      "Microsoft.PowerShell.5.ReferenceAssemblies >= 1.1.0",
+      "Microsoft.WindowsAPICodePack-Core >= 1.1.0.2",
+      "Microsoft.WindowsAPICodePack-Shell >= 1.1.0",
+      "SevenZipExtractor >= 1.0.15",
+      "System.IO.Compression >= 4.3.0",
+      "System.IO.Compression.ZipFile >= 4.3.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\jong8\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\jong8\\source\\repos\\ReShade Centralized\\ReShade Centralized.csproj",
+      "projectName": "ReShade Centralized",
+      "projectPath": "C:\\Users\\jong8\\source\\repos\\ReShade Centralized\\ReShade Centralized.csproj",
+      "packagesPath": "C:\\Users\\jong8\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jong8\\source\\repos\\ReShade Centralized\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\jong8\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net472"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net472": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net472": {
+        "dependencies": {
+          "Microsoft.PowerShell.5.ReferenceAssemblies": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
+          "Microsoft.WindowsAPICodePack-Core": {
+            "target": "Package",
+            "version": "[1.1.0.2, )"
+          },
+          "Microsoft.WindowsAPICodePack-Shell": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
+          "SevenZipExtractor": {
+            "target": "Package",
+            "version": "[1.0.15, )"
+          },
+          "System.IO.Compression": {
+            "target": "Package",
+            "version": "[4.3.0, )"
+          },
+          "System.IO.Compression.ZipFile": {
+            "target": "Package",
+            "version": "[4.3.0, )"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
+      }
+    }
+  }
+}

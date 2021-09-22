@@ -266,6 +266,54 @@ namespace ReShade_Centralized
 
         public static void writeReshadeini(string dest, string workingDLLPath, string gameName, string gameDir)
         {
+            if (!File.Exists(@".\ReShade_Template.ini"))
+            {
+                MessageBox.Show(@"ReShade_Template.ini not found, installing with old method.  Rename ReShade_Template_Example.ini to ReShade_Template.ini to use the new method.");
+                writeReshadeiniFallback(dest, workingDLLPath, gameName, gameDir);
+                return;
+            }
+
+            List<string> reshadeconfig = new List<string>();
+            using (StreamReader r = new StreamReader(@".\ReShade_Template.ini"))
+            {
+                while (!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    if (line.StartsWith(@"EffectSearchPaths="))
+                    {
+                        line = @"EffectSearchPaths=" + Program.shaders + @"," + Program.shaders + @"\development";
+                    }
+                    else if (line.StartsWith(@"IntermediateCachePath="))
+                    {
+                        line = @"IntermediateCachePath=" + workingDLLPath + @"\Cache";
+                    }
+                    else if (line.StartsWith(@"PresetPath="))
+                    {
+                        line = @"PresetPath=" + Program.presets + @"\" + gameName + @"\ReshadePreset.ini";
+                    }
+                    else if (line.StartsWith(@"TextureSearchPaths="))
+                    {
+                        line = @"TextureSearchPaths=" + Program.textures + @"," + Program.textures + @"\development";
+                    }
+                    else if (line.StartsWith(@"SavePath="))
+                    {
+                        line = @"SavePath=" + Program.screenshots + @"\" + gameName;
+                    }
+                    reshadeconfig.Add(line);
+                }
+            }
+            using (StreamWriter w = new StreamWriter(dest + @"\reshade.ini"))
+            {
+                foreach(string line in reshadeconfig)
+                {
+                    w.WriteLine(line);
+                }
+            }
+            SymbolicLink.CreateSymbolicLink(gameDir + @"\reshade.ini", dest + @"\reshade.ini", 0);
+        }
+
+        public static void writeReshadeiniFallback(string dest, string workingDLLPath, string gameName, string gameDir) //Used if reshade_template.ini is missing
+        {
             string nl = "\n"; //makes typing up that multiline write a bit easier
             File.WriteAllText(dest + @"\reshade.ini",
                     @"[GENERAL]" + nl +
@@ -363,6 +411,11 @@ namespace ReShade_Centralized
         public static void copyFiles(string source, string dest, string[] extensions) //enumerates all files of given extensions in source directory and subdirectories and moves them to dest directory, effectively collapsing folder structure.
         {
             DirectoryInfo d = new DirectoryInfo(source);
+
+            if (!Directory.Exists(dest))
+            {
+                Directory.CreateDirectory(dest);
+            }
 
             var files =
                 d.EnumerateFiles("*", SearchOption.AllDirectories)

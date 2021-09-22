@@ -24,7 +24,7 @@ namespace ReShade_Centralized
         {
             if (!File.Exists("ReShadeCentralized.ini"))
             {
-                MessageBox.Show("Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
+                MessageBox.Show(@"Looks like this is your first time running ReShade Centralized, initiating setup.  Please select your desired ReShade Centralized folder.", "First Time Startup Message");
                 FirstTimeSetup startup = new FirstTimeSetup();
                 startup.ShowDialog();
                 if (startup.DialogResult == DialogResult.Cancel)
@@ -61,6 +61,13 @@ namespace ReShade_Centralized
             else
             {
                 Functions.readRCIni();
+            }
+            if (!File.Exists(@".\ReShade_Template.ini"))
+            {
+                if (File.Exists(@".\ReShade_Template_Example.ini"))
+                {
+                    File.Move(@".\ReShade_Template_Example.ini", @".\ReShade_Template.ini");
+                }
             }
             backgroundWorker4.RunWorkerAsync(); //Check for updates
         }
@@ -183,7 +190,7 @@ namespace ReShade_Centralized
 
             gameDialog.Title = "Select the game's runtime executable.";
             gameDialog.Filter = "Select EXE|*.exe";
-            gameDialog.InitialDirectory = @"C:\";
+            //gameDialog.InitialDirectory = @"C:\";
             if (gameDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -384,15 +391,13 @@ namespace ReShade_Centralized
             BackgroundWorker worker = sender as BackgroundWorker;
 
             worker.ReportProgress(0);
-
-            var items = Prompt.ShowCheckBoxes(new string[] { "qUINT - Marty McFly", "Standard - Crosire", "Legacy - Crosire", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MShaders - TreyM", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
+            var items = Prompt.ShowCheckBoxes(new string[] { "Standard - Crosire (REQUIRED)", "Legacy - Crosire", "qUINT - Marty McFly", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra", "FGFX - AlexTuduran", "Glamarye Fast Effects - rj200" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
             using (var client = new WebClient())
             {
                 bool legacy = false;
                 bool fxshaders = false;
                 bool lunacy = false;
                 bool radegast = false;
-                bool treym = false;
                 bool matsilagi = false;
                 bool lordkobra = false;
                 var rand = new Random();
@@ -409,20 +414,7 @@ namespace ReShade_Centralized
                 {
                     switch (items[i])
                     {
-                        case "qUINT - Marty McFly":
-                            try
-                            {
-                                client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
-                            }
-                            catch
-                            {
-                                MessageBox.Show(dlFail + items[i]);
-                            }
-                            pbarValue += pbarInc;
-                            worker.ReportProgress(pbarValue);
-                            break;
-
-                        case "Standard - Crosire":
+                         case "Standard - Crosire (REQUIRED)":
                             try
                             {
                                 client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/slim.zip", randTempRootFolder + @"\crosire.zip");
@@ -445,6 +437,19 @@ namespace ReShade_Centralized
                                 MessageBox.Show(dlFail + items[i]);
                             }
                             legacy = true;
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "qUINT - Marty McFly":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/martymcmodding/qUINT/archive/master.zip", randTempRootFolder + @"\quint.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
@@ -622,20 +627,6 @@ namespace ReShade_Centralized
                             worker.ReportProgress(pbarValue);
                             break;
 
-                        case "MShaders - TreyM":
-                            try
-                            {
-                                client.DownloadFile(@"https://github.com/TreyM/MShaders/archive/main.zip", randTempRootFolder + @"\mshaders.zip");
-                            }
-                            catch
-                            {
-                                MessageBox.Show(dlFail + items[i]);
-                            }
-                            treym = true;
-                            pbarValue += pbarInc;
-                            worker.ReportProgress(pbarValue);
-                            break;
-
                         case "MLUT - TheGordinho":
                             try
                             {
@@ -689,6 +680,32 @@ namespace ReShade_Centralized
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
+
+                        case "FGFX - AlexTuduran":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/AlexTuduran/FGFX/archive/refs/heads/main.zip", randTempRootFolder + @"\FGFX.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "Glamarye Fast Effects - rj200":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/rj200/Glamarye_Fast_Effects_for_ReShade/archive/refs/heads/main.zip", randTempRootFolder + @"\Glamarye.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
                     }
                 }
                 client.Dispose();
@@ -724,12 +741,6 @@ namespace ReShade_Centralized
                 {
                     Directory.CreateDirectory(Program.shaders + @"\" + "FXShaders");
                     DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\FXShaders-master\Shaders\FXShaders", Program.shaders + @"\FXShaders");
-                }
-
-                if (treym == true)
-                {
-                    Directory.CreateDirectory(Program.shaders + @"\" + "Include");
-                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\MShaders-main\Shaders\MShaders\Include", Program.shaders + @"\Include");
                 }
 
                 //Lord of Lunacy has folders that contain in-development/deprecated shaders.  Delete those now.

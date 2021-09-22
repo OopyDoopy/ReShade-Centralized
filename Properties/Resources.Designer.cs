@@ -61,7 +61,7 @@ namespace ReShade_Centralized.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0.3.3.
+        ///   Looks up a localized string similar to 0.4.0.
         /// </summary>
         internal static string Version {
             get {
