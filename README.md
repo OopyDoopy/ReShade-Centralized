@@ -14,7 +14,6 @@ ReShade Centralized is an installer (made in C# and .NET) meant to replace the o
 
 ## Planned Improvements:
 - Expand shader download functionality to include updating only pre-existing shaders.
-- Add more customization for the options in the reshade.ini file
 - Add full vulkan support (currently requires the global install from the normal reshade installer)
 - Any other feasible user requests
 
