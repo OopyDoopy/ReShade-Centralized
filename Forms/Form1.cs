@@ -78,12 +78,12 @@ namespace ReShade_Centralized
             
 
             bool modded = false;
-            switch ((Prompt.ShowRadioButtons(new string[] { @"Official", "Modded" }, "Select Official or Modified ReShade.", 250, 140, @"Modified ReShade files are self provided.  Place ReShade64.dll and ReShade32.dll in the reshade-files-mod folder to use.")).Text)
+            switch ((Prompt.ShowRadioButtons(new string[] { @"ReShade", "ReShade + Addons" }, "ReShade Type.", 250, 140)).Text)
             {
-                case "Official":
+                case "ReShade":
                     modded = false;
                     break;
-                case "Modded":
+                case "ReShade + Addons":
                     modded = true;
                     break;
             }
@@ -224,7 +224,7 @@ namespace ReShade_Centralized
 
             string workingDLLPath = Program.dlls; //apply working path to variable, mostly for reshade.ini generation
 
-            if (Prompt.ShowRadioButtons(new string[] { "Official", "Modified" }, @"Select Official or Modified ReShade.", 250, 140, @"Modified ReShade files are self provided.  Place ReShade64.dll and ReShade32.dll in the reshade-files-mod folder to use.").Text == "Official")
+            if (Prompt.ShowRadioButtons(new string[] { "ReShade", "ReShade + Addons" }, @"ReShade Type", 250, 140).Text == "ReShade")
             {
                 if (File.Exists(Path.GetDirectoryName(gameDialog.FileName) + gamedll)) //placed here and duplicated in Else{} just in case the user closes the application when prompted
                 {
@@ -293,6 +293,8 @@ namespace ReShade_Centralized
                 //Download Reshade
                 worker.ReportProgress(0);
                 string download = String.Empty;
+                string downloadReshade = String.Empty;
+                string downloadReshadeAddon = String.Empty;
                 try
                 {
                     download = client.DownloadString("https://reshade.me");
@@ -303,11 +305,14 @@ namespace ReShade_Centralized
                     worker.ReportProgress(0);
                     return;
                 }
-                Regex rg = new Regex(@"/downloads/\S*.exe");
-                download = "https://reshade.me" + rg.Match(download).ToString();
+                Regex rgReshade = new Regex(@"/downloads/\S*.exe");
+                Regex rgReshadeAddon = new Regex(@"/downloads/\S*_Addon.exe");
+                downloadReshade = "https://reshade.me" + rgReshade.Match(download).ToString();
+                downloadReshadeAddon = "https://reshade.me" + rgReshadeAddon.Match(download).ToString();
                 try
                 {
-                    client.DownloadFile(download, "reshade.exe");
+                    client.DownloadFile(downloadReshade, "reshade.exe");
+                    client.DownloadFile(downloadReshadeAddon, "reshade_addon.exe");
                 }
                 catch
                 {
@@ -316,7 +321,8 @@ namespace ReShade_Centralized
                     return;
                 }
                 worker.ReportProgress(15);
-
+                int prog = 15;
+                //Normal Reshade Archive Extraction
                 using (ArchiveFile archiveFile = new ArchiveFile(@"ReShade.exe"))
                 {
                     foreach (Entry entry in archiveFile.Entries)
@@ -325,11 +331,10 @@ namespace ReShade_Centralized
                         if (entry.FileName == "[0]")
                         {
                             entry.Extract(entry.FileName);
-                            worker.ReportProgress(30);
+                            worker.ReportProgress(15);
 
                             using (ArchiveFile archiveFile2 = new ArchiveFile(@"[0]"))
                             {
-                                int prog = 30;
                                 foreach (Entry entry2 in archiveFile2.Entries)
                                 {
                                     if (entry2.FileName == "ReShade32.dll" || entry2.FileName == "ReShade64.dll")
@@ -340,7 +345,37 @@ namespace ReShade_Centralized
                                             File.Delete(Program.dlls + @"\" + entry2.FileName);
                                         }
                                         File.Move(entry2.FileName, Program.dlls + @"\" + entry2.FileName);
-                                        worker.ReportProgress(prog += 20);
+                                        worker.ReportProgress(prog += 10);
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+                //Addon Reshade Archive Extraction
+                using (ArchiveFile archiveFile = new ArchiveFile(@"ReShade_addon.exe"))
+                {
+                    foreach (Entry entry in archiveFile.Entries)
+                    {
+                        //MessageBox.Show(entry.FileName);
+                        if (entry.FileName == "[0]")
+                        {
+                            entry.Extract(entry.FileName);
+
+                            using (ArchiveFile archiveFile2 = new ArchiveFile(@"[0]"))
+                            {
+                                foreach (Entry entry2 in archiveFile2.Entries)
+                                {
+                                    if (entry2.FileName == "ReShade32.dll" || entry2.FileName == "ReShade64.dll")
+                                    {
+                                        entry2.Extract(entry2.FileName);
+                                        if (File.Exists(Program.mdlls + @"\" + entry2.FileName))
+                                        {
+                                            File.Delete(Program.mdlls + @"\" + entry2.FileName);
+                                        }
+                                        File.Move(entry2.FileName, Program.mdlls + @"\" + entry2.FileName);
+                                        worker.ReportProgress(prog += 10);
                                     }
                                 }
                             }
@@ -357,7 +392,7 @@ namespace ReShade_Centralized
                 catch
                 {
                     MessageBox.Show(@"The link for the Injector is invalid.  Please report this problem on the ReShade Centralized github page.");
-                    return;
+                    //return;
                 }
                 File.Copy(Program.dlls + @"\inject32.exe", Program.mdlls + @"\inject32.exe", true);
                 File.Copy(Program.dlls + @"\inject64.exe", Program.mdlls + @"\inject64.exe", true);
