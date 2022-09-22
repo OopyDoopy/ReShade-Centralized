@@ -398,6 +398,7 @@ namespace ReShade_Centralized
                 File.Copy(Program.dlls + @"\inject64.exe", Program.mdlls + @"\inject64.exe", true);
             }
             File.Delete(@"reshade.exe");
+            File.Delete(@"ReShade_addon.exe");
             File.Delete(@"[0]");
             worker.ReportProgress(100);
         }
