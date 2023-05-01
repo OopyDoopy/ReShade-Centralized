@@ -427,15 +427,15 @@ namespace ReShade_Centralized
             BackgroundWorker worker = sender as BackgroundWorker;
 
             worker.ReportProgress(0);
-            var items = Prompt.ShowCheckBoxes(new string[] { "Standard - Crosire (REQUIRED)", "Legacy - Crosire", "qUINT - Marty McFly", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra", "FGFX - AlexTuduran", "Glamarye Fast Effects - rj200" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
+            var items = Prompt.ShowCheckBoxes(new string[] { "Standard - Crosire (REQUIRED)", "Legacy - Crosire", "iMMERSE - Marty McFly", "qUINT - Marty McFly", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra", "FGFX - AlexTuduran", "Glamarye Fast Effects - rj200" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
             using (var client = new WebClient())
             {
                 bool legacy = false;
                 bool fxshaders = false;
-                bool lunacy = false;
                 bool radegast = false;
                 bool matsilagi = false;
                 bool lordkobra = false;
+                bool immerse = false;
                 var rand = new Random();
                 string randTempRootFolder = @".\temp" + rand.Next().ToString();
                 while (Directory.Exists(randTempRootFolder))
@@ -466,7 +466,7 @@ namespace ReShade_Centralized
                         case "Legacy - Crosire":
                             try
                             {
-                                client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/master.zip", randTempRootFolder + @"\legacy.zip");
+                                client.DownloadFile(@"https://github.com/crosire/reshade-shaders/archive/refs/heads/legacy.zip", randTempRootFolder + @"\legacy.zip");
                             }
                             catch
                             {
@@ -486,6 +486,20 @@ namespace ReShade_Centralized
                             {
                                 MessageBox.Show(dlFail + items[i]);
                             }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "iMMERSE - Marty McFly":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/martymcmodding/iMMERSE/archive/master.zip", randTempRootFolder + @"\immerse.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            immerse = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
@@ -658,7 +672,6 @@ namespace ReShade_Centralized
                             {
                                 MessageBox.Show(dlFail + items[i]);
                             }
-                            lunacy = true;
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
@@ -764,7 +777,6 @@ namespace ReShade_Centralized
                         ZipFile.ExtractToDirectory(randTempRootFolder + @"\legacy.zip", randTempRootFolder + @"\legacy");
                     }
                     File.Delete(randTempRootFolder + @"\legacy.zip");
-                    File.Delete(randTempRootFolder + @"\legacy\reshade-shaders-master\Shaders\MXAO.fx"); //outdated mxao, causes issues with quint so delete
                     Functions.moveFiles(randTempRootFolder + @"\legacy", Program.shaders, shaderExtensions);
                     Functions.moveFiles(randTempRootFolder + @"\legacy", Program.textures, textureExtensions);
                 }
@@ -779,11 +791,11 @@ namespace ReShade_Centralized
                     DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\FXShaders-master\Shaders\FXShaders", Program.shaders + @"\FXShaders");
                 }
 
-                //Lord of Lunacy has folders that contain in-development/deprecated shaders.  Delete those now.
-                if (lunacy == true)
+                //iMMERSE requires additional files in a specific folder, move that folder now.
+                if (immerse == true)
                 {
-                    Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\DevShaders", true);
-                    Directory.Delete(randTempRootFolder + @"\Insane-Shaders-master\Shaders\OldShaders", true);
+                    Directory.CreateDirectory(Program.shaders + @"\" + "MartysMods");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\iMMERSE-main\Shaders\MartysMods", Program.shaders + @"\MartysMods");
                 }
 
                 if (radegast == true)
