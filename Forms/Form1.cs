@@ -427,7 +427,7 @@ namespace ReShade_Centralized
             BackgroundWorker worker = sender as BackgroundWorker;
 
             worker.ReportProgress(0);
-            var items = Prompt.ShowCheckBoxes(new string[] { "Standard - Crosire (REQUIRED)", "Legacy - Crosire", "iMMERSE - Marty McFly", "qUINT - Marty McFly", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra", "FGFX - AlexTuduran", "Glamarye Fast Effects - rj200" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
+            var items = Prompt.ShowCheckBoxes(new string[] { "Standard - Crosire (REQUIRED)", "Legacy - Crosire", "iMMERSE - Marty McFly", "qUINT - Marty McFly", "SweetFX - CeeJayDK", "Color Effects - prod80", "Depth3D - BlueSkyDefender", "AstrayFX - BlueSkyDefender", "OtisFX - Otis Inf", "Pirate Shaders - Heathen", "Shaders - Brussell1", "Shaders - Daodan317081", "CorgiFX - originalnicoder", "Fubax - Fubaxiusz", "FXShaders - luluco250", "Shaders - Radegast", "Insane Shaders - Lord of Lunacy", "MLUT - TheGordinho", "RSRetroArch - Matsilagi", "Shaders - MadCake", "CobraFX - LordKobra", "FGFX - AlexTuduran", "Glamarye Fast Effects - rj200", "ReShade HDR Shaders - EndlesslyFlowering", "PumboAutoHDR - Pumbo" }, @"Select shader repos to download.", 200, 400, 178).CheckedItems;
             using (var client = new WebClient())
             {
                 bool legacy = false;
@@ -436,6 +436,7 @@ namespace ReShade_Centralized
                 bool matsilagi = false;
                 bool lordkobra = false;
                 bool immerse = false;
+                bool lilium = false;
                 var rand = new Random();
                 string randTempRootFolder = @".\temp" + rand.Next().ToString();
                 while (Directory.Exists(randTempRootFolder))
@@ -755,6 +756,33 @@ namespace ReShade_Centralized
                             pbarValue += pbarInc;
                             worker.ReportProgress(pbarValue);
                             break;
+
+                        case "ReShade HDR Shaders - EndlesslyFlowering":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/EndlesslyFlowering/ReShade_HDR_shaders/archive/refs/heads/master.zip", randTempRootFolder + @"\Lilium.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            lilium = true;
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
+
+                        case "PumboAutoHDR - Pumbo":
+                            try
+                            {
+                                client.DownloadFile(@"https://github.com/Filoppi/PumboAutoHDR/archive/refs/heads/master.zip", randTempRootFolder + @"\Pumbo.zip");
+                            }
+                            catch
+                            {
+                                MessageBox.Show(dlFail + items[i]);
+                            }
+                            pbarValue += pbarInc;
+                            worker.ReportProgress(pbarValue);
+                            break;
                     }
                 }
                 client.Dispose();
@@ -820,6 +848,12 @@ namespace ReShade_Centralized
                 if (lordkobra == true)
                 {
                     Directory.Delete(randTempRootFolder + @"\CobraFX-master\Shaders\outdated", true);
+                }
+
+                if (lilium == true)
+                {
+                    Directory.CreateDirectory(Program.shaders + @"\" + "lilium__include");
+                    DirectoryExtensions.MoveDirectoryOverwrite(randTempRootFolder + @"\ReShade_HDR_shaders-master\Shaders\lilium__include", Program.shaders + @"\lilium__include");
                 }
 
                 //End special cases------------

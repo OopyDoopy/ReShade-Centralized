@@ -29,6 +29,7 @@ namespace ReShade_Centralized
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.installuwp = new System.Windows.Forms.Button();
             this.installwin32 = new System.Windows.Forms.Button();
             this.updatereshade = new System.Windows.Forms.Button();
@@ -51,10 +52,9 @@ namespace ReShade_Centralized
             // 
             // installuwp
             // 
-            this.installuwp.Location = new System.Drawing.Point(226, 352);
-            this.installuwp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.installuwp.Location = new System.Drawing.Point(151, 229);
             this.installuwp.Name = "installuwp";
-            this.installuwp.Size = new System.Drawing.Size(284, 75);
+            this.installuwp.Size = new System.Drawing.Size(189, 49);
             this.installuwp.TabIndex = 2;
             this.installuwp.Text = "Install to Microsoft Store";
             this.installuwp.UseVisualStyleBackColor = true;
@@ -62,10 +62,9 @@ namespace ReShade_Centralized
             // 
             // installwin32
             // 
-            this.installwin32.Location = new System.Drawing.Point(226, 268);
-            this.installwin32.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.installwin32.Location = new System.Drawing.Point(151, 174);
             this.installwin32.Name = "installwin32";
-            this.installwin32.Size = new System.Drawing.Size(284, 75);
+            this.installwin32.Size = new System.Drawing.Size(189, 49);
             this.installwin32.TabIndex = 3;
             this.installwin32.Text = "Install to Game";
             this.installwin32.UseVisualStyleBackColor = true;
@@ -76,10 +75,9 @@ namespace ReShade_Centralized
             this.updatereshade.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.updatereshade.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.updatereshade.ForeColor = System.Drawing.Color.Black;
-            this.updatereshade.Location = new System.Drawing.Point(80, 91);
-            this.updatereshade.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.updatereshade.Location = new System.Drawing.Point(53, 59);
             this.updatereshade.Name = "updatereshade";
-            this.updatereshade.Size = new System.Drawing.Size(284, 43);
+            this.updatereshade.Size = new System.Drawing.Size(189, 28);
             this.updatereshade.TabIndex = 5;
             this.updatereshade.Text = "Update ReShade";
             this.updatereshade.UseVisualStyleBackColor = false;
@@ -88,10 +86,9 @@ namespace ReShade_Centralized
             // pbar
             // 
             this.pbar.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.pbar.Location = new System.Drawing.Point(80, 143);
-            this.pbar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbar.Location = new System.Drawing.Point(53, 93);
             this.pbar.Name = "pbar";
-            this.pbar.Size = new System.Drawing.Size(284, 35);
+            this.pbar.Size = new System.Drawing.Size(189, 23);
             this.pbar.TabIndex = 6;
             this.pbar.Click += new System.EventHandler(this.pbar_Click);
             // 
@@ -106,10 +103,9 @@ namespace ReShade_Centralized
             // 
             this.updateShaders.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.updateShaders.ForeColor = System.Drawing.Color.Black;
-            this.updateShaders.Location = new System.Drawing.Point(372, 91);
-            this.updateShaders.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.updateShaders.Location = new System.Drawing.Point(248, 59);
             this.updateShaders.Name = "updateShaders";
-            this.updateShaders.Size = new System.Drawing.Size(284, 43);
+            this.updateShaders.Size = new System.Drawing.Size(189, 28);
             this.updateShaders.TabIndex = 7;
             this.updateShaders.Text = "Update Shaders";
             this.updateShaders.UseVisualStyleBackColor = false;
@@ -118,10 +114,9 @@ namespace ReShade_Centralized
             // pbar2
             // 
             this.pbar2.BackColor = System.Drawing.SystemColors.InfoText;
-            this.pbar2.Location = new System.Drawing.Point(372, 143);
-            this.pbar2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbar2.Location = new System.Drawing.Point(248, 93);
             this.pbar2.Name = "pbar2";
-            this.pbar2.Size = new System.Drawing.Size(284, 35);
+            this.pbar2.Size = new System.Drawing.Size(189, 23);
             this.pbar2.TabIndex = 8;
             // 
             // backgroundWorker2
@@ -134,13 +129,13 @@ namespace ReShade_Centralized
             // menuStrip1
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(736, 33);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
+            this.menuStrip1.Size = new System.Drawing.Size(491, 24);
             this.menuStrip1.TabIndex = 9;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -150,20 +145,20 @@ namespace ReShade_Centralized
             this.customizePathsToolStripMenuItem,
             this.reinstallAllReshadeiniToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // customizePathsToolStripMenuItem
             // 
             this.customizePathsToolStripMenuItem.Name = "customizePathsToolStripMenuItem";
-            this.customizePathsToolStripMenuItem.Size = new System.Drawing.Size(325, 34);
+            this.customizePathsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.customizePathsToolStripMenuItem.Text = "Customize Paths";
             this.customizePathsToolStripMenuItem.Click += new System.EventHandler(this.customizePathsToolStripMenuItem_Click);
             // 
             // reinstallAllReshadeiniToolStripMenuItem
             // 
             this.reinstallAllReshadeiniToolStripMenuItem.Name = "reinstallAllReshadeiniToolStripMenuItem";
-            this.reinstallAllReshadeiniToolStripMenuItem.Size = new System.Drawing.Size(325, 34);
+            this.reinstallAllReshadeiniToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.reinstallAllReshadeiniToolStripMenuItem.Text = "Update Configuration Files";
             this.reinstallAllReshadeiniToolStripMenuItem.Click += new System.EventHandler(this.reinstallAllReshadeiniToolStripMenuItem_Click);
             // 
@@ -176,10 +171,9 @@ namespace ReShade_Centralized
             // 
             this.labelReshade.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelReshade.Location = new System.Drawing.Point(75, 183);
-            this.labelReshade.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelReshade.Location = new System.Drawing.Point(50, 119);
             this.labelReshade.Name = "labelReshade";
-            this.labelReshade.Size = new System.Drawing.Size(288, 20);
+            this.labelReshade.Size = new System.Drawing.Size(192, 13);
             this.labelReshade.TabIndex = 10;
             this.labelReshade.Text = "Update Progress: 100%";
             this.labelReshade.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -187,10 +181,9 @@ namespace ReShade_Centralized
             // 
             // labelShaders
             // 
-            this.labelShaders.Location = new System.Drawing.Point(372, 183);
-            this.labelShaders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelShaders.Location = new System.Drawing.Point(248, 119);
             this.labelShaders.Name = "labelShaders";
-            this.labelShaders.Size = new System.Drawing.Size(284, 20);
+            this.labelShaders.Size = new System.Drawing.Size(189, 13);
             this.labelShaders.TabIndex = 11;
             this.labelShaders.Text = "Update Progress: 100%";
             this.labelShaders.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -199,9 +192,10 @@ namespace ReShade_Centralized
             // updateLink
             // 
             this.updateLink.AutoSize = true;
-            this.updateLink.Location = new System.Drawing.Point(584, 414);
+            this.updateLink.Location = new System.Drawing.Point(389, 269);
+            this.updateLink.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.updateLink.Name = "updateLink";
-            this.updateLink.Size = new System.Drawing.Size(133, 20);
+            this.updateLink.Size = new System.Drawing.Size(91, 13);
             this.updateLink.TabIndex = 12;
             this.updateLink.TabStop = true;
             this.updateLink.Text = "Update Available!";
@@ -216,10 +210,10 @@ namespace ReShade_Centralized
             // Form1
             // 
             this.AccessibleName = "ReShade Centralized";
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(736, 448);
+            this.ClientSize = new System.Drawing.Size(491, 291);
             this.Controls.Add(this.updateLink);
             this.Controls.Add(this.labelShaders);
             this.Controls.Add(this.labelReshade);
@@ -230,8 +224,8 @@ namespace ReShade_Centralized
             this.Controls.Add(this.installwin32);
             this.Controls.Add(this.installuwp);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ReShade Centralized";

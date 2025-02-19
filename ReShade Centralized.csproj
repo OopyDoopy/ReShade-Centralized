@@ -76,6 +76,9 @@
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>00045-3601538189.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Forms\CustomizePathsForm.cs">
       <SubType>Form</SubType>
@@ -198,6 +201,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="00045-3601538189.ico" />
     <Content Include="ILMergeOrder.txt" />
   </ItemGroup>
   <ItemGroup>
